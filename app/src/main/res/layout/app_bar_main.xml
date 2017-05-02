@@ -20,17 +20,36 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="#FF000000"
-        app:backgroundTint="@android:color/background_dark"
-        app:rippleColor="@android:color/darker_gray"
-        app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom | end"
+        android:gravity="bottom">
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="48dp"
+            android:layout_height="51dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:backgroundTint="#FF000000"
+            app:rippleColor="@android:color/darker_gray"
+            app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/fab"
+            android:layout_margin="@dimen/fab_margin"
+            android:backgroundTint="#FF000000"
+            app:rippleColor="@android:color/darker_gray"
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_content_paste_black_24dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
