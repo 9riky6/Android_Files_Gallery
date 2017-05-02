@@ -36,9 +36,9 @@
             android:layout_height="51dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_create_new_folder_black_24dp"
             android:backgroundTint="#FF000000"
-            app:rippleColor="@android:color/darker_gray"
-            app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+            app:rippleColor="@android:color/darker_gray" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -46,10 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/fab"
             android:layout_margin="@dimen/fab_margin"
+            android:visibility="gone"
+            android:src="@drawable/ic_content_paste_black_24dp"
             android:backgroundTint="#FF000000"
-            app:rippleColor="@android:color/darker_gray"
-            android:clickable="true"
-            app:srcCompat="@drawable/ic_content_paste_black_24dp"
-            android:visibility="gone"/>
+            app:rippleColor="@android:color/darker_gray" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
