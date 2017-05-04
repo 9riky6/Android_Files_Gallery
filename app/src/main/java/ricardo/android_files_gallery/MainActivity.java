@@ -2,10 +2,13 @@ package ricardo.android_files_gallery;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SwitchCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,12 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import static android.R.attr.button;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                    PhoneFragment.OnFragmentInteractionListener{
+        PhoneFragment.OnFragmentInteractionListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +86,28 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+//        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.blanco_switch);
+//
+//        switchCompat.setChecked(false);
+//        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView,
+//                                         boolean isChecked) {
+//            }
+//        });
+//
+//        //check the current state before we display the screen
+//        if (switchCompat.isChecked()) {
+//            Toast.makeText(MainActivity.this,
+//                    "Blanco", Toast.LENGTH_LONG).show();
+//        } else {
+//            Toast.makeText(MainActivity.this,
+//                    "Negro", Toast.LENGTH_LONG).show();
+//        }
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -124,7 +152,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
         } else if (id == R.id.blanco_switch) {
-
 
         }
 
