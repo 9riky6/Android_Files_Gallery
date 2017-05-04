@@ -12,7 +12,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Ajustes" />
     </group>
-    <item android:id="@+id/nav_switch"
+
+    <item android:id="@+id/blanco_switch"
+        app:actionLayout="@layout/action_view_switch"
+        android:title="Blanco/Negro" />
+    <item android:id="@+id/nav_"
         app:actionLayout="@layout/action_view_switch"
         android:title="Blanco/Negro" />
 </menu>

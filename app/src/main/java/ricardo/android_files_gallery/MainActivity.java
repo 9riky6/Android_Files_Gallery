@@ -1,8 +1,10 @@
 package ricardo.android_files_gallery;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -13,9 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                    PhoneFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,38 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
+        phoneStorage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                PhoneFragment phoneFrag = new PhoneFragment();
+//                FragmentManager manager = getSupportFragmentManager();
+//                manager.beginTransaction().replace(
+//                        R.id.include,
+//                        phoneFrag,
+//                        phoneFrag.getTag()
+//                ).commit();
+                Toast.makeText(MainActivity.this,
+                        "Phone Storage", Toast.LENGTH_LONG).show();
+            }
+        });
+        RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
+        sdStorage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                PhoneFragment phoneFrag = new PhoneFragment();
+//                FragmentManager manager = getSupportFragmentManager();
+//                manager.beginTransaction().replace(
+//                        R.id.include,
+//                        phoneFrag,
+//                        phoneFrag.getTag()
+//                ).commit();
+                Toast.makeText(MainActivity.this,
+                        "SD Storage", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
@@ -83,15 +120,21 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            Toast.makeText(this, "Galeria", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_gallery) {
+            Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.blanco_switch) {
 
-        } else if (id == R.id.nav_switch){
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
