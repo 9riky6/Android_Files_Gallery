@@ -16,7 +16,4 @@
     <item android:id="@+id/blanco_switch"
         app:actionLayout="@layout/action_view_switch"
         android:title="Blanco/Negro" />
-    <item android:id="@+id/nav_"
-        app:actionLayout="@layout/action_view_switch"
-        android:title="Blanco/Negro" />
 </menu>

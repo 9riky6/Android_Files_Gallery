@@ -1,22 +1,20 @@
 package ricardo.android_files_gallery;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import petrov.kristiyan.colorpicker.ColorPicker;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -27,6 +25,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,13 +53,7 @@ public class MainActivity extends AppCompatActivity
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PhoneFragment phoneFrag = new PhoneFragment();
-//                FragmentManager manager = getSupportFragmentManager();
-//                manager.beginTransaction().replace(
-//                        R.id.include,
-//                        phoneFrag,
-//                        phoneFrag.getTag()
-//                ).commit();
+
                 Toast.makeText(MainActivity.this,
                         "Phone Storage", Toast.LENGTH_LONG).show();
             }
@@ -143,19 +137,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            final ColorPicker colorPicker = new ColorPicker(MainActivity.this);
-            colorPicker.setOFastChooser(new ColorPicker.OnFastChooseColorListener() {
-                @Override
-                public void setOnFastChooseColorListener(int position, int color) {
-                    // put code
-                }
-
-                @Override
-                public void onCancel(){
-                    // put code
-                }
-            }).setDefaultColor(Color.parseColor("#f84c44")).setColumns(5).show();
-            Toast.makeText(this, "Galeria", Toast.LENGTH_LONG).show();
+            ChoiceColor phoneFrag = new ChoiceColor();
+            FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(
+                        R.id.fragment_container,
+                        phoneFrag,
+                        phoneFrag.getTag()
+                ).commit();
         } else if (id == R.id.nav_gallery) {
             Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
         } else if (id == R.id.blanco_switch) {
