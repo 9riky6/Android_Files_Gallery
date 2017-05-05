@@ -1,8 +1,8 @@
 package ricardo.android_files_gallery;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,15 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import petrov.kristiyan.colorpicker.ColorPicker;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ChoiceColor.OnFragmentInteractionListener {
-
+    TextView InternalStorage , ExternalStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        listRoots();
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -76,8 +75,7 @@ public class MainActivity extends AppCompatActivity
 //                        phoneFrag.getTag()
 //                ).commit();
 
-                Toast.makeText(MainActivity.this,
-                        "SD Storage", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"SD Storage", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -143,18 +141,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            final ColorPicker colorPicker = new ColorPicker(MainActivity.this);
-            colorPicker.setOFastChooser(new ColorPicker.OnFastChooseColorListener() {
-                @Override
-                public void setOnFastChooseColorListener(int position, int color) {
-                    // put code
-                }
-
-                @Override
-                public void onCancel(){
-                    // put code
-                }
-            }).setDefaultColor(Color.parseColor("#f84c44")).setColumns(5).show();
+//            final ColorPicker colorPicker = new ColorPicker(MainActivity.this);
+//            colorPicker.setOFastChooser(new ColorPicker.OnFastChooseColorListener() {
+//                @Override
+//                public void setOnFastChooseColorListener(int position, int color) {
+//                    // put code
+//                }
+//
+//                @Override
+//                public void onCancel(){
+//                    // put code
+//                }
+//            }).setDefaultColor(Color.parseColor("#f84c44")).setColumns(5).show();
             Toast.makeText(this, "Galeria", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_gallery) {
             Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
@@ -170,5 +168,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    private void listRoots(){
+        InternalStorage = (TextView)findViewById(R.id.textTituloInter);
+        ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
+
+        String IntStorage,External;
+//        String[] Info= new String[30];
+//        int i=0;
+//        do{
+//            i=0;
+//            Info[i] = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            if(Info[i].contains("storage")){
+//                InternalStorage.setText(Info[i].concat("--Mobil--"));
+//            }if(Info[i].contains("ext")){
+//                ExternalStorage.setText(Info[i].concat("--SD--"));
+//            }
+//            i++;
+//        }while(Info!=null || i==30);
+        IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+        //External =Environment.getDownloadCacheDirectory().getAbsolutePath();
+        //ExternalStorage.setText(External);
+        if (IntStorage.contains("storage")){
+            InternalStorage.setText(IntStorage);
+        }
     }
 }
