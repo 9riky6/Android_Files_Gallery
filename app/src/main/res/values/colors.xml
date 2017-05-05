@@ -2,7 +2,9 @@
 <resources>
     <color name="colorPrimary">#FF119d90</color>
     <color name="colorPrimaryDark">#FF119d90</color>
-    <color name="colorAccent">#43a49f</color>
+    <color name="colorAccent">#FF119d90</color>
+
+    <!--Custom colors-->
     <color name="maraschino">#ef3d35</color>
     <color name="cayenne">#b31e3e</color>
     <color name="marron">#812e39</color>
