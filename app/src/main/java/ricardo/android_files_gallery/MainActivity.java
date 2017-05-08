@@ -1,15 +1,13 @@
 package ricardo.android_files_gallery;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        ChoiceColor.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     @Override
@@ -97,17 +94,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -136,17 +122,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            ChoiceColor phoneFrag = new ChoiceColor();
-            FragmentManager manager = getSupportFragmentManager();
-                manager.beginTransaction().replace(
-                        R.id.fragment_container,
-                        phoneFrag,
-                        phoneFrag.getTag()
-                ).commit();
-        } else if (id == R.id.nav_gallery) {
-            Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.blanco_switch) {
+        if (id == R.id.phone_storage) {
+            Toast.makeText(this, "PHONE Menu", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.sd_storage) {
+            Toast.makeText(this, "SD Menu", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_galeria) {
+            Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.nav_settings) {
+            Intent searchIntent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(searchIntent);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        } else if(id == R.id.about_us) {
+            Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
+        }else if (id == R.id.blanco_switch) {
 
         }
 
@@ -156,7 +144,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
