@@ -1,5 +1,6 @@
 package ricardo.android_files_gallery;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,13 +20,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ChoiceColor.OnFragmentInteractionListener {
-
-
+    private boolean load=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //loading
+        Intent intent1 = new Intent(MainActivity.this,app_loading.class);
+        if(load){startActivityForResult(intent1,1001);load=false;}
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
