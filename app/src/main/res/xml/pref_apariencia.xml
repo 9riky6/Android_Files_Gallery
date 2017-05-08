@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <Preference
+        android:defaultValue="true"
+        android:key="notifications_new_message"
+        android:title="Escoge color del tema" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="apariencia_minimalista"
+        android:title="" />
+
+    <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+    <SwitchPreference
+        android:defaultValue="false"
+        android:dependency="apariencia_minimalista"
+        android:key="Autoplay"
+        android:title="Autoplay" />
+
+</PreferenceScreen>

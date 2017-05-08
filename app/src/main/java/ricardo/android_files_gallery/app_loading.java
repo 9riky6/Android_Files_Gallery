@@ -15,7 +15,7 @@ public class app_loading extends AppCompatActivity {
     private ProgressBar spinner;
     Button bt1 ;
     carregan loading1;
-    private int TIME_SLEEP= 15;//en segundos
+    private int TIME_SLEEP= 5;//en segundos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
