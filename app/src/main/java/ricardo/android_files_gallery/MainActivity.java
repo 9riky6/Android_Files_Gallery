@@ -1,8 +1,7 @@
 package ricardo.android_files_gallery;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,9 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -26,6 +23,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         listRoots();
@@ -52,13 +51,7 @@ public class MainActivity extends AppCompatActivity
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PhoneFragment phoneFrag = new PhoneFragment();
-//                FragmentManager manager = getSupportFragmentManager();
-//                manager.beginTransaction().replace(
-//                        R.id.include,
-//                        phoneFrag,
-//                        phoneFrag.getTag()
-//                ).commit();
+
                 Toast.makeText(MainActivity.this,
                         "Phone Storage", Toast.LENGTH_LONG).show();
             }
@@ -75,7 +68,8 @@ public class MainActivity extends AppCompatActivity
 //                        phoneFrag.getTag()
 //                ).commit();
 
-                Toast.makeText(MainActivity.this,"SD Storage", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,
+                        "SD Storage", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -99,17 +93,6 @@ public class MainActivity extends AppCompatActivity
 //                    "Negro", Toast.LENGTH_LONG).show();
 //        }
 
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -140,23 +123,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-//            final ColorPicker colorPicker = new ColorPicker(MainActivity.this);
-//            colorPicker.setOFastChooser(new ColorPicker.OnFastChooseColorListener() {
-//                @Override
-//                public void setOnFastChooseColorListener(int position, int color) {
-//                    // put code
-//                }
-//
-//                @Override
-//                public void onCancel(){
-//                    // put code
-//                }
-//            }).setDefaultColor(Color.parseColor("#f84c44")).setColumns(5).show();
-            Toast.makeText(this, "Galeria", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_gallery) {
-            Toast.makeText(this, "Ajuste", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.blanco_switch) {
+        if (id == R.id.phone_storage) {
+            Toast.makeText(this, "PHONE Menu", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.sd_storage) {
+            Toast.makeText(this, "SD Menu", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_galeria) {
+            Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.nav_settings) {
+            Intent searchIntent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(searchIntent);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        } else if(id == R.id.about_us) {
+            Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
+        }else if (id == R.id.blanco_switch) {
 
         }
 
@@ -193,6 +172,13 @@ public class MainActivity extends AppCompatActivity
         //ExternalStorage.setText(External);
         if (IntStorage.contains("storage")){
             InternalStorage.setText(IntStorage);
+        }
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }
