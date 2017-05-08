@@ -2,23 +2,22 @@ package ricardo.android_files_gallery;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        ChoiceColor.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private boolean load=true;
     TextView InternalStorage , ExternalStorage;
 
@@ -149,17 +148,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
 
-    private void listRoots(){
-        InternalStorage = (TextView)findViewById(R.id.textTituloInter);
+    private void listRoots() {
+        InternalStorage = (TextView) findViewById(R.id.textTituloInter);
         ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
 
-        String IntStorage,External;
+        String IntStorage, External;
 //        String[] Info= new String[30];
 //        int i=0;
 //        do{
@@ -175,9 +170,10 @@ public class MainActivity extends AppCompatActivity
         IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
         //External =Environment.getDownloadCacheDirectory().getAbsolutePath();
         //ExternalStorage.setText(External);
-        if (IntStorage.contains("storage")){
+        if (IntStorage.contains("storage")) {
             InternalStorage.setText(IntStorage);
         }
+    }
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
