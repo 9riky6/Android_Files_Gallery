@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+
     private boolean load=true;
     TextView InternalStorage , ExternalStorage;
 
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_galeria) {
             Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_settings) {
-            Intent searchIntent = new Intent(MainActivity.this, SettingsActivity.class);
+            Intent searchIntent = new Intent(MainActivity.this, SettingsAct.class);
             startActivity(searchIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         } else if(id == R.id.about_us) {
