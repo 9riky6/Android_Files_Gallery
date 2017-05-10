@@ -1,364 +1,364 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme.default" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.default.NoActionBar">
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <!--Custom Themes-->
-    <style name="AppTheme.maraschino" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_maraschino" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/maraschino</item>
         <item name="colorPrimaryDark">@color/maraschino</item>
         <item name="colorAccent">@color/maraschino</item>
     </style>
 
-    <style name="AppTheme.maraschino.NoActionBar">
+    <style name="AppTheme_maraschino.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.cayenne" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_cayenne" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/cayenne</item>
         <item name="colorPrimaryDark">@color/cayenne</item>
         <item name="colorAccent">@color/cayenne</item>
     </style>
 
-    <style name="AppTheme.cayenne.NoActionBar">
+    <style name="AppTheme_cayenne.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
 
-    <style name="AppTheme.marron" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_marron" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/marron</item>
         <item name="colorPrimaryDark">@color/marron</item>
         <item name="colorAccent">@color/marron</item>
     </style>
 
-    <style name="AppTheme.marron.NoActionBar">
+    <style name="AppTheme_marron.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.plum" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_plum" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/plum</item>
         <item name="colorPrimaryDark">@color/plum</item>
         <item name="colorAccent">@color/plum</item>
     </style>
 
-    <style name="AppTheme.plum.NoActionBar">
+    <style name="AppTheme_plum.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.eggplant" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_eggplant" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/eggplant</item>
         <item name="colorPrimaryDark">@color/eggplant</item>
         <item name="colorAccent">@color/eggplant</item>
     </style>
 
-    <style name="AppTheme.eggplant.NoActionBar">
+    <style name="AppTheme_eggplant.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.grape" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_grape" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/grape</item>
         <item name="colorPrimaryDark">@color/grape</item>
         <item name="colorAccent">@color/grape</item>
     </style>
 
-    <style name="AppTheme.grape.NoActionBar">
+    <style name="AppTheme_grape.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.orchid" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_orchid" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/orchid</item>
         <item name="colorPrimaryDark">@color/orchid</item>
         <item name="colorAccent">@color/orchid</item>
     </style>
 
-    <style name="AppTheme.orchid.NoActionBar">
+    <style name="AppTheme_orchid.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.lavender" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_lavender" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/lavender</item>
         <item name="colorPrimaryDark">@color/lavender</item>
         <item name="colorAccent">@color/lavender</item>
     </style>
 
-    <style name="AppTheme.lavender.NoActionBar">
+    <style name="AppTheme_lavender.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.carnation" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_carnation" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/carnation</item>
         <item name="colorPrimaryDark">@color/carnation</item>
         <item name="colorAccent">@color/carnation</item>
     </style>
 
-    <style name="AppTheme.carnation.NoActionBar">
+    <style name="AppTheme_carnation.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.strawberry" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_strawberry" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/strawberry</item>
         <item name="colorPrimaryDark">@color/strawberry</item>
         <item name="colorAccent">@color/strawberry</item>
     </style>
 
-    <style name="AppTheme.strawberry.NoActionBar">
+    <style name="AppTheme_strawberry.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.bubblegum" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_bubblegum" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/bubblegum</item>
         <item name="colorPrimaryDark">@color/bubblegum</item>
         <item name="colorAccent">@color/bubblegum</item>
     </style>
 
-    <style name="AppTheme.bubblegum.NoActionBar">
+    <style name="AppTheme_bubblegum.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.magenta" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_magenta" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/magenta</item>
         <item name="colorPrimaryDark">@color/magenta</item>
         <item name="colorAccent">@color/magenta</item>
     </style>
 
-    <style name="AppTheme.magenta.NoActionBar">
+    <style name="AppTheme_magenta.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.salmon" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_salmon" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/salmon</item>
         <item name="colorPrimaryDark">@color/salmon</item>
         <item name="colorAccent">@color/salmon</item>
     </style>
 
-    <style name="AppTheme.salmon.NoActionBar">
+    <style name="AppTheme_salmon.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.tangerine" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_tangerine" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/tangerine</item>
         <item name="colorPrimaryDark">@color/tangerine</item>
         <item name="colorAccent">@color/tangerine</item>
     </style>
 
-    <style name="AppTheme.tangerine.NoActionBar">
+    <style name="AppTheme_tangerine.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.cantaloupe" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_cantaloupe" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/cantaloupe</item>
         <item name="colorPrimaryDark">@color/cantaloupe</item>
         <item name="colorAccent">@color/cantaloupe</item>
     </style>
 
-    <style name="AppTheme.cantaloupe.NoActionBar">
+    <style name="AppTheme_cantaloupe.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.banana" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_banana" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/banana</item>
         <item name="colorPrimaryDark">@color/banana</item>
         <item name="colorAccent">@color/banana</item>
     </style>
 
-    <style name="AppTheme.banana.NoActionBar">
+    <style name="AppTheme_banana.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.lemon" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_lemon" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/lemon</item>
         <item name="colorPrimaryDark">@color/lemon</item>
         <item name="colorAccent">@color/lemon</item>
     </style>
 
-    <style name="AppTheme.lemon.NoActionBar">
+    <style name="AppTheme_lemon.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.honeydew" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_honeydew" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/honeydew</item>
         <item name="colorPrimaryDark">@color/honeydew</item>
         <item name="colorAccent">@color/honeydew</item>
     </style>
 
-    <style name="AppTheme.honeydew.NoActionBar">
+    <style name="AppTheme_honeydew.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.lime" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_lime" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/lime</item>
         <item name="colorPrimaryDark">@color/lime</item>
         <item name="colorAccent">@color/lime</item>
     </style>
 
-    <style name="AppTheme.lime.NoActionBar">
+    <style name="AppTheme_lime.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.spring" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_spring" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/spring</item>
         <item name="colorPrimaryDark">@color/spring</item>
         <item name="colorAccent">@color/spring</item>
     </style>
 
-    <style name="AppTheme.spring.NoActionBar">
+    <style name="AppTheme_spring.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.clover" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_clover" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/clover</item>
         <item name="colorPrimaryDark">@color/clover</item>
         <item name="colorAccent">@color/clover</item>
     </style>
 
-    <style name="AppTheme.clover.NoActionBar">
+    <style name="AppTheme_clover.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.fern" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_fern" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/fern</item>
         <item name="colorPrimaryDark">@color/fern</item>
         <item name="colorAccent">@color/fern</item>
     </style>
 
-    <style name="AppTheme.fern.NoActionBar">
+    <style name="AppTheme_fern.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.moss" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_moss" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/moss</item>
         <item name="colorPrimaryDark">@color/moss</item>
         <item name="colorAccent">@color/moss</item>
     </style>
 
-    <style name="AppTheme.moss.NoActionBar">
+    <style name="AppTheme_moss.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.flora" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_flora" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/flora</item>
         <item name="colorPrimaryDark">@color/flora</item>
         <item name="colorAccent">@color/flora</item>
     </style>
 
-    <style name="AppTheme.flora.NoActionBar">
+    <style name="AppTheme_flora.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.seafoam" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_seafoam" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/seafoam</item>
         <item name="colorPrimaryDark">@color/seafoam</item>
         <item name="colorAccent">@color/seafoam</item>
     </style>
 
-    <style name="AppTheme.seafoam.NoActionBar">
+    <style name="AppTheme_seafoam.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.spindrift" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_spindrift" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/spindrift</item>
         <item name="colorPrimaryDark">@color/spindrift</item>
         <item name="colorAccent">@color/spindrift</item>
     </style>
 
-    <style name="AppTheme.spindrift.NoActionBar">
+    <style name="AppTheme_spindrift.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.teal" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_teal" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">@color/teal</item>
         <item name="colorAccent">@color/teal</item>
     </style>
 
-    <style name="AppTheme.teal.NoActionBar">
+    <style name="AppTheme_teal.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.sky" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_sky" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/sky</item>
         <item name="colorPrimaryDark">@color/sky</item>
         <item name="colorAccent">@color/sky</item>
     </style>
 
-    <style name="AppTheme.sky.NoActionBar">
+    <style name="AppTheme_sky.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.tuquoise" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_tuquoise" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/tuquoise</item>
         <item name="colorPrimaryDark">@color/tuquoise</item>
         <item name="colorAccent">@color/tuquoise</item>
     </style>
 
-    <style name="AppTheme.tuquoise.NoActionBar">
+    <style name="AppTheme_tuquoise.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -366,5 +366,4 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>

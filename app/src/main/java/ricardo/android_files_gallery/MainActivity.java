@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,29 +26,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
-        //loading
-        Intent intent1 = new Intent(MainActivity.this,app_loading.class);
-        if(load){startActivityForResult(intent1,1001);load=false;}
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        listRoots();
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
+//        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), Constant.color));
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -108,17 +97,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(id == R.id.action_settings){
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -134,8 +118,8 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "SD Menu", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_galeria) {
             Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_settings) {
-            Intent searchIntent = new Intent(MainActivity.this, SettingsAct.class);
+        } else if (id == R.id.nav_apariencia) {
+            Intent searchIntent = new Intent(MainActivity.this, ColorinesActivity.class);
             startActivity(searchIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         } else if(id == R.id.about_us) {

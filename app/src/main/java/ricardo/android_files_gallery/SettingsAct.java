@@ -70,7 +70,7 @@ public class SettingsAct extends AppCompatActivity
             Toast.makeText(this, "SD Menu", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_galeria) {
             Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_apariencia) {
             Intent searchIntent = new Intent(SettingsAct.this, SettingsAct.class);
             startActivity(searchIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
