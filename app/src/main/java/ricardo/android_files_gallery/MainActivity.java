@@ -1,6 +1,7 @@
 package ricardo.android_files_gallery;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -9,12 +10,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -26,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //loading
         Intent intent1 = new Intent(MainActivity.this,app_loading.class);
         if(load){startActivityForResult(intent1,1001);load=false;}
@@ -58,7 +66,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 Toast.makeText(MainActivity.this,
-                        "Phone Storage", Toast.LENGTH_LONG).show();
+                        "Phone Storage Main", Toast.LENGTH_LONG).show();
+            //File manager <3
+                Intent intent = new Intent(getApplicationContext(),FileManager.class);
+                intent.putExtra("path","/");
+                startActivity(intent);
             }
         });
         RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity
 //                ).commit();
 
                 Toast.makeText(MainActivity.this,
-                        "SD Storage", Toast.LENGTH_LONG).show();
+                        "SD Storage Main", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -153,27 +165,16 @@ public class MainActivity extends AppCompatActivity
 
     private void listRoots() {
         InternalStorage = (TextView) findViewById(R.id.textTituloInter);
-        ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
+       // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
 
-        String IntStorage, External;
-//        String[] Info= new String[30];
-//        int i=0;
-//        do{
-//            i=0;
-//            Info[i] = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            if(Info[i].contains("storage")){
-//                InternalStorage.setText(Info[i].concat("--Mobil--"));
-//            }if(Info[i].contains("ext")){
-//                ExternalStorage.setText(Info[i].concat("--SD--"));
-//            }
-//            i++;
-//        }while(Info!=null || i==30);
+        String IntStorage;
+
         IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
-        //External =Environment.getDownloadCacheDirectory().getAbsolutePath();
-        //ExternalStorage.setText(External);
-        if (IntStorage.contains("storage")) {
-            InternalStorage.setText(IntStorage);
+        if(IntStorage.contains("sdcard"))
+        {
+            InternalStorage.setText("Phone Storage <3");
         }
+        //Falta posar la SD
     }
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

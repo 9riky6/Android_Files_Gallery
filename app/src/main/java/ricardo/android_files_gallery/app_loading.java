@@ -15,7 +15,7 @@ public class app_loading extends AppCompatActivity {
     private ProgressBar spinner;
     Button bt1 ;
     carregan loading1;
-    private int TIME_SLEEP= 1;//en segundos
+    private int TIME_SLEEP= 2;//en segundos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ private void conexion(){
         @Override
         protected void onPostExecute(Boolean result) {
             if(result){
-                Toast.makeText(app_loading.this, "Conexion finalizada!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(app_loading.this, "WELCOME!",Toast.LENGTH_SHORT).show();
                 Intent intent = getIntent();
                 spinner.setVisibility(View.INVISIBLE);
                 //activity loading
