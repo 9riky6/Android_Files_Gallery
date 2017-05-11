@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +19,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.snappydb.SnappydbException;
+
+import ricardo.android_files_gallery.Database.DBAccess;
+import ricardo.android_files_gallery.Database.Database;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private boolean load=true;
     TextView InternalStorage , ExternalStorage;
-
+    private String rutasInterna= null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        listRoots();
+        rutasInterna=listRoots();
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity
                         "Phone Storage Main", Toast.LENGTH_LONG).show();
             //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                intent.putExtra("path","/");
+                intent.putExtra("path",rutasInterna+"/");
                 startActivity(intent);
             }
         });
@@ -169,18 +175,21 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private void listRoots() {
+    private String listRoots() {
+        String ruta=null;
         InternalStorage = (TextView) findViewById(R.id.textTituloInter);
        // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
 
         String IntStorage;
 
         IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+        ruta = IntStorage;
         if(IntStorage.contains("sdcard"))
         {
             InternalStorage.setText("Phone Storage <3");
         }
         //Falta posar la SD
+        return ruta;
     }
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
