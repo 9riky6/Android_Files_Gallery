@@ -1,8 +1,7 @@
-package ricardo.android_files_gallery;
+package ricardo.android_files_gallery.ColorChoser;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -15,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import ricardo.android_files_gallery.ColorChoser.ColorChooserDialog;
-import ricardo.android_files_gallery.ColorChoser.ColorListener;
+import ricardo.android_files_gallery.MainActivity;
+import ricardo.android_files_gallery.R;
 
 
 /**
@@ -24,8 +23,6 @@ import ricardo.android_files_gallery.ColorChoser.ColorListener;
  */
 
 public class ColorinesActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
     Button button;
     Methods methods;
 
@@ -35,14 +32,15 @@ public class ColorinesActivity extends AppCompatActivity {
         setTheme(Constant.theme);
         setContentView(R.layout.colories);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+        setSupportActionBar(toolbar);
+
+
         toolbar.setTitle("Colorines");
 //        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), Constant.color));
 
         methods = new Methods();
         button = (Button) findViewById(R.id.colorines_boton);
-        sharedPreferences = getSharedPreferences("Colorines", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
 
         colorize();
 
@@ -56,9 +54,8 @@ public class ColorinesActivity extends AppCompatActivity {
                     @Override
                     public void OnColorClick(View v, int color) {
                         colorize();
+                        Constant.color = color;
                         methods.setColorTheme(ColorinesActivity.this, color);
-                        editor.putInt("color", color);
-                        editor.putInt("theme", Constant.theme);
 
                         Intent intent = new Intent(ColorinesActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -72,8 +69,8 @@ public class ColorinesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -82,9 +79,9 @@ public class ColorinesActivity extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void colorize(){
+    private void colorize() {
         ShapeDrawable d = new ShapeDrawable(new OvalShape());
-        d.setBounds(58,58,58,58);
+        d.setBounds(32, 32, 32, 32);
 
         d.getPaint().setStyle(Paint.Style.FILL);
         d.getPaint().setColor(ContextCompat.getColor(getApplicationContext(), Constant.color));

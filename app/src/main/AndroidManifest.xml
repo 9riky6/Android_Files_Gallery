@@ -22,10 +22,10 @@
             android:name=".app_loading"
             android:label="Loading" />
         <activity
-            android:name=".ColorinesActivity"
+            android:name=".ColorChoser.ColorinesActivity"
             android:label="Apariencia"/>
         <activity
-            android:name=".FileManager"
+            android:name=".Files.FileManager"
             android:label="managerFile"/>
     </application>
 
