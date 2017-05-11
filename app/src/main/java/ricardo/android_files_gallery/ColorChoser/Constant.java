@@ -1,6 +1,8 @@
-package ricardo.android_files_gallery;
+package ricardo.android_files_gallery.ColorChoser;
 
 import java.io.Serializable;
+
+import ricardo.android_files_gallery.R;
 
 /**
  * Created by Ricardo on 07/05/2017.

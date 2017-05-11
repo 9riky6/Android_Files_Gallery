@@ -1,8 +1,7 @@
-package ricardo.android_files_gallery;
+package ricardo.android_files_gallery.ColorChoser;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -15,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import ricardo.android_files_gallery.ColorChoser.ColorChooserDialog;
-import ricardo.android_files_gallery.ColorChoser.ColorListener;
+import ricardo.android_files_gallery.MainActivity;
+import ricardo.android_files_gallery.R;
 
 
 /**
@@ -33,7 +32,9 @@ public class ColorinesActivity extends AppCompatActivity {
         setTheme(Constant.theme);
         setContentView(R.layout.colories);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+        setSupportActionBar(toolbar);
+
 
         toolbar.setTitle("Colorines");
 //        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), Constant.color));

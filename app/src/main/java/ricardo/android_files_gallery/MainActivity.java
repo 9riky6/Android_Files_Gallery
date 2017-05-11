@@ -1,11 +1,9 @@
 package ricardo.android_files_gallery;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,8 +19,12 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
+import ricardo.android_files_gallery.ColorChoser.ColorinesActivity;
+import ricardo.android_files_gallery.ColorChoser.Constant;
+import ricardo.android_files_gallery.ColorChoser.Methods;
 import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
+import ricardo.android_files_gallery.Files.FileManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{

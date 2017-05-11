@@ -15,15 +15,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
-
-import com.snappydb.SnappydbException;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ricardo.android_files_gallery.Constant;
-import ricardo.android_files_gallery.Database.DBAccess;
-import ricardo.android_files_gallery.Database.Database;
 import ricardo.android_files_gallery.R;
 
 

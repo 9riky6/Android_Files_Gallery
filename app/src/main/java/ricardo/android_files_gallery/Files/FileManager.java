@@ -1,4 +1,4 @@
-package ricardo.android_files_gallery;
+package ricardo.android_files_gallery.Files;
 
 
 import android.content.Context;
@@ -13,6 +13,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
+
+import ricardo.android_files_gallery.MainActivity;
+import ricardo.android_files_gallery.R;
 
 
 public class FileManager extends AppCompatActivity{

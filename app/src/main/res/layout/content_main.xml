@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="8dp"
-            android:src="@drawable/ic_storage" />
+            app:srcCompat="@drawable/ic_storage" />
 
         <TextView
             android:id="@+id/textTituloInter"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="8dp"
-            android:src="@drawable/ic_sd_storage" />
+            app:srcCompat="@drawable/ic_sd_storage" />
 
         <TextView
             android:id="@+id/textTituloExt"
