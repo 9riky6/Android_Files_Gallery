@@ -28,8 +28,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import ricardo.android_files_gallery.ColorChoser.ColorinesActivity;
+import ricardo.android_files_gallery.ColorChoser.Constant;
+import ricardo.android_files_gallery.ColorChoser.Methods;
 import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
+import ricardo.android_files_gallery.Files.FileManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{

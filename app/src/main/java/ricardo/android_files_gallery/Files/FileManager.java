@@ -13,6 +13,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Arrays;
 
 import ricardo.android_files_gallery.MainActivity;
 import ricardo.android_files_gallery.R;
@@ -69,6 +70,7 @@ public class FileManager extends AppCompatActivity{
         }
         //Fa el ls. També introdueix imatge.
         final File[] children = file.listFiles();
+        Arrays.sort(children);
 
         for(int i=0;i<children.length;i++){
 
