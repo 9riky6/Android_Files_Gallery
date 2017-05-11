@@ -66,6 +66,7 @@ public class FileManager extends AppCompatActivity{
         }
         //Fa el ls. També introdueix imatge.
         final File[] children = file.listFiles();
+
         for(int i=0;i<children.length;i++){
 
             //Fem layout amb taula + inflater
@@ -92,15 +93,20 @@ public class FileManager extends AppCompatActivity{
             TextView extension = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
             if (children[i].isFile()){
+                //tamaño
                 long temp = children[i].length();
                 if (temp %1024 != 0)
                     temp = temp/1024 + 1;
                 else
                     temp = temp/1024;
                 size.setText(String.valueOf(temp)+" KB");
+
+                //tipo
                 String temp2 = children[i].getName();
+
                 if(temp2.contains("."))
                     extension.setText("Fitxer " + temp2.substring(temp2.lastIndexOf(".")+1));
+
                 else
                     extension.setText("Fitxer");
             }

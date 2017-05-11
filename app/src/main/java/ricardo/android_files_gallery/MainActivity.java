@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +22,22 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-
+    private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
     private boolean load=true;
     TextView InternalStorage , ExternalStorage;
-    private String rutasInterna= null;
+    private String rutaInterna= null;
+    private String[] rutaExterna=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +66,9 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        rutasInterna=listRoots();
+        rutaInterna=RutaInterna();
+        rutaExterna=RutaExterna();
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -83,10 +93,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 Toast.makeText(MainActivity.this,
-                        "Phone Storage Main", Toast.LENGTH_LONG).show();
-            //File manager <3
+                        rutaInterna+"/", Toast.LENGTH_LONG).show();
+//            //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                intent.putExtra("path",rutasInterna+"/");
+                intent.putExtra("path",rutaInterna+"/"); //rutaInterna
                 startActivity(intent);
             }
         });
@@ -94,48 +104,19 @@ public class MainActivity extends AppCompatActivity
         sdStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PhoneFragment phoneFrag = new PhoneFragment();
-//                FragmentManager manager = getSupportFragmentManager();
-//                manager.beginTransaction().replace(
-//                        R.id.include,
-//                        phoneFrag,
-//                        phoneFrag.getTag()
-//                ).commit();
 
-                Toast.makeText(MainActivity.this,
-                        "SD Storage", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,rutaExterna[0], Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,rutaExterna[1], Toast.LENGTH_LONG).show();
+                //File manager SD External
             }
         });
-
-//        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.blanco_switch);
-//
-//        switchCompat.setChecked(false);
-//        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView,
-//                                         boolean isChecked) {
-//            }
-//        });
-//
-//        //check the current state before we display the screen
-//        if (switchCompat.isChecked()) {
-//            Toast.makeText(MainActivity.this,
-//                    "Blanco", Toast.LENGTH_LONG).show();
-//        } else {
-//            Toast.makeText(MainActivity.this,
-//                    "Negro", Toast.LENGTH_LONG).show();
-//        }
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
@@ -145,7 +126,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -172,10 +152,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-    private String listRoots() {
+    private String RutaInterna() {
         String ruta=null;
         InternalStorage = (TextView) findViewById(R.id.textTituloInter);
        // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
@@ -190,6 +167,72 @@ public class MainActivity extends AppCompatActivity
         }
         //Falta posar la SD
         return ruta;
+    }
+    private String[] RutaExterna(){
+        // Final set of paths
+        final Set<String> rv = new HashSet<String>();
+        // Primary physical SD-CARD (not emulated)
+        final String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
+        // All Secondary SD-CARDs (all exclude primary) separated by ":"
+        final String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
+        // Primary emulated SD-CARD
+        final String rawEmulatedStorageTarget = System.getenv("EMULATED_STORAGE_TARGET");
+        if(TextUtils.isEmpty(rawEmulatedStorageTarget))
+        {
+            // Device has physical external storage; use plain paths.
+            if(TextUtils.isEmpty(rawExternalStorage))
+            {
+                // EXTERNAL_STORAGE undefined; falling back to default.
+                rv.add("/storage/sdcard0");
+            }
+            else
+            {
+                rv.add(rawExternalStorage);
+            }
+        }
+        else
+        {
+            // Device has emulated storage; external storage paths should have
+            // userId burned into them.
+            final String rawUserId;
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
+            {
+                rawUserId = "";
+            }
+            else
+            {
+                final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                final String[] folders = DIR_SEPORATOR.split(path);
+                final String lastFolder = folders[folders.length - 1];
+                boolean isDigit = false;
+                try
+                {
+                    Integer.valueOf(lastFolder);
+                    isDigit = true;
+                }
+                catch(NumberFormatException ignored)
+                {
+                }
+                rawUserId = isDigit ? lastFolder : "";
+            }
+            // /storage/emulated/0[1,2,...]
+            if(TextUtils.isEmpty(rawUserId))
+            {
+                rv.add(rawEmulatedStorageTarget);
+            }
+            else
+            {
+                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
+            }
+        }
+        // Add all secondary storages
+        if(!TextUtils.isEmpty(rawSecondaryStoragesStr))
+        {
+            // All Secondary SD-CARDs splited into array
+            final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
+            Collections.addAll(rv, rawSecondaryStorages);
+        }
+        return rv.toArray(new String[rv.size()]);
     }
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
