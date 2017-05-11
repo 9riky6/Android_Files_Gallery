@@ -1,15 +1,23 @@
 package ricardo.android_files_gallery;
 
+import android.content.Context;
+
+import com.snappydb.SnappydbException;
+
+import ricardo.android_files_gallery.Database.DBAccess;
+import ricardo.android_files_gallery.Database.Database;
+
 /**
  * Created by Ricardo on 07/05/2017.
  */
 
 public class Methods {
 
-    private static int maraschino = Constant.maraschino;
-
-    public void setColorTheme(){
-        switch (Constant.color){
+    public static void setColorTheme(Context context, Integer color) {
+        if (color == null) {
+            color = Constant.color;
+        }
+        switch (Constant.color) {
             case 0xffef3d35:
                 Constant.theme = R.style.AppTheme_maraschino;
                 break;
@@ -97,6 +105,14 @@ public class Methods {
             case 0xff06bbc2:
                 Constant.theme = R.style.AppTheme_tuquoise;
                 break;
+        }
+        try {
+            Database db = new Database(context);
+            db.putInt(DBAccess.COLOR, color);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        } catch (SnappydbException e) {
+            e.printStackTrace();
         }
     }
 }

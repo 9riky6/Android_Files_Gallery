@@ -11,18 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -33,6 +27,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Database database = new Database(this);
+        Integer color = null;
+        try {
+            color = database.getInt(DBAccess.COLOR);
+            Log.d("asd", color.toString());
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+        if(color == null){
+            try {
+                database.putInt(DBAccess.COLOR, Constant.sky);
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+            }
+            color = Constant.sky;
+        }
+
+        Methods.setColorTheme(this, color);
+
         setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
 
@@ -117,17 +131,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(id == R.id.action_settings){
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -56,8 +56,7 @@ public class ColorinesActivity extends AppCompatActivity {
                     @Override
                     public void OnColorClick(View v, int color) {
                         colorize();
-                        Constant.color = color;
-                        methods.setColorTheme();
+                        methods.setColorTheme(ColorinesActivity.this, color);
                         editor.putInt("color", color);
                         editor.putInt("theme", Constant.theme);
 
