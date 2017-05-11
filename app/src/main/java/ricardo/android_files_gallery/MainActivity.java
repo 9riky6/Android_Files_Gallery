@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
+
+
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,9 +111,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(MainActivity.this,rutaExterna[0], Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,rutaExterna[0]+"/", Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,rutaExterna[1], Toast.LENGTH_LONG).show();
                 //File manager SD External
+                Intent intent = new Intent(getApplicationContext(),FileManager.class);
+                intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
+                startActivity(intent);
             }
         });
     }
