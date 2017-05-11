@@ -24,8 +24,6 @@ import ricardo.android_files_gallery.ColorChoser.ColorListener;
  */
 
 public class ColorinesActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
     Button button;
     Methods methods;
 
@@ -36,13 +34,12 @@ public class ColorinesActivity extends AppCompatActivity {
         setContentView(R.layout.colories);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+
         toolbar.setTitle("Colorines");
 //        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), Constant.color));
 
         methods = new Methods();
         button = (Button) findViewById(R.id.colorines_boton);
-        sharedPreferences = getSharedPreferences("Colorines", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
 
         colorize();
 
@@ -56,9 +53,8 @@ public class ColorinesActivity extends AppCompatActivity {
                     @Override
                     public void OnColorClick(View v, int color) {
                         colorize();
+                        Constant.color = color;
                         methods.setColorTheme(ColorinesActivity.this, color);
-                        editor.putInt("color", color);
-                        editor.putInt("theme", Constant.theme);
 
                         Intent intent = new Intent(ColorinesActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -72,8 +68,8 @@ public class ColorinesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -82,9 +78,9 @@ public class ColorinesActivity extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void colorize(){
+    private void colorize() {
         ShapeDrawable d = new ShapeDrawable(new OvalShape());
-        d.setBounds(58,58,58,58);
+        d.setBounds(32, 32, 32, 32);
 
         d.getPaint().setStyle(Paint.Style.FILL);
         d.getPaint().setColor(ContextCompat.getColor(getApplicationContext(), Constant.color));

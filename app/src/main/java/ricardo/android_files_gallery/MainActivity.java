@@ -1,16 +1,15 @@
 package ricardo.android_files_gallery;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +17,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+import com.snappydb.SnappydbException;
 
-    private boolean load=true;
-    TextView InternalStorage , ExternalStorage;
+import ricardo.android_files_gallery.Database.DBAccess;
+import ricardo.android_files_gallery.Database.Database;
+
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
+    private boolean load = true;
+    TextView InternalStorage, ExternalStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +40,13 @@ public class MainActivity extends AppCompatActivity
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
-        if(color == null){
+        if (color == null) {
             try {
-                database.putInt(DBAccess.COLOR, Constant.sky);
+                database.putInt(DBAccess.COLOR, Constant.def);
             } catch (SnappydbException e) {
                 e.printStackTrace();
             }
-            color = Constant.sky;
+            color = Constant.def;
         }
 
         Methods.setColorTheme(this, color);
@@ -78,9 +82,9 @@ public class MainActivity extends AppCompatActivity
 
                 Toast.makeText(MainActivity.this,
                         "Phone Storage Main", Toast.LENGTH_LONG).show();
-            //File manager <3
-                Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                intent.putExtra("path","/");
+                //File manager <3
+                Intent intent = new Intent(getApplicationContext(), FileManager.class);
+                intent.putExtra("path", "/");
                 startActivity(intent);
             }
         });
@@ -131,10 +135,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -156,9 +160,9 @@ public class MainActivity extends AppCompatActivity
             Intent searchIntent = new Intent(MainActivity.this, ColorinesActivity.class);
             startActivity(searchIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        } else if(id == R.id.about_us) {
+        } else if (id == R.id.about_us) {
             Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
-        }else if (id == R.id.blanco_switch) {
+        } else if (id == R.id.blanco_switch) {
 
         }
 
@@ -168,19 +172,43 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+//    private void listRoots() {
+//        InternalStorage = (TextView) findViewById(R.id.textTituloInter);
+//       // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
+//
+//        String IntStorage;
+//
+//        IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        if(IntStorage.contains("sdcard"))
+//        {
+//            InternalStorage.setText("Phone Storage <3");
+//        }
+//Falta posar la SD
+//}
 
     private void listRoots() {
         InternalStorage = (TextView) findViewById(R.id.textTituloInter);
-       // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
+        ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
 
-        String IntStorage;
-
+        String IntStorage, External;
+//        String[] Info= new String[30];
+//        int i=0;
+//        do{
+//            i=0;
+//            Info[i] = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            if(Info[i].contains("storage")){
+//                InternalStorage.setText(Info[i].concat("--Mobil--"));
+//            }if(Info[i].contains("ext")){
+//                ExternalStorage.setText(Info[i].concat("--SD--"));
+//            }
+//            i++;
+//        }while(Info!=null || i==30);
         IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
-        if(IntStorage.contains("sdcard"))
-        {
-            InternalStorage.setText("Phone Storage <3");
+        //External =Environment.getDownloadCacheDirectory().getAbsolutePath();
+        //ExternalStorage.setText(External);
+        if (IntStorage.contains("storage")) {
+            InternalStorage.setText(IntStorage);
         }
-        //Falta posar la SD
     }
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

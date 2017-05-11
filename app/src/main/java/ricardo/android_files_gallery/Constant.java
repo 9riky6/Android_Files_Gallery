@@ -15,6 +15,7 @@ public class Constant implements Serializable {
     public static int theme = R.style.AppTheme;
 
 
+    public static int def = 0xff119d90;
     public static int maraschino = 0xffef3d35;
     public static int cayenne = 0xffb31e3e;
     public static int marron = 0xff812e39;

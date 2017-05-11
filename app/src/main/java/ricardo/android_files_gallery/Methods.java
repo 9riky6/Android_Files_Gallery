@@ -1,9 +1,9 @@
 package ricardo.android_files_gallery;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.snappydb.SnappydbException;
-
 import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
 
@@ -109,6 +109,7 @@ public class Methods {
         try {
             Database db = new Database(context);
             db.putInt(DBAccess.COLOR, color);
+            Log.d("Color insertado", color.toString());
         }catch (NullPointerException e){
             e.printStackTrace();
         } catch (SnappydbException e) {
