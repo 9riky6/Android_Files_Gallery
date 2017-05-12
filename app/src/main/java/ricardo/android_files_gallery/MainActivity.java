@@ -96,9 +96,11 @@ public class MainActivity extends AppCompatActivity
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long tamañosd = rutaExterna[0].length();
+                String mostrar = Long.toString(tamañosd);
 
-                Toast.makeText(MainActivity.this,
-                        rutaInterna+"/", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
 //            //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaInterna+"/"); //rutaInterna
@@ -106,46 +108,25 @@ public class MainActivity extends AppCompatActivity
             }
         });
         RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
-        sdStorage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                PhoneFragment phoneFrag = new PhoneFragment();
-//                FragmentManager manager = getSupportFragmentManager();
-//                manager.beginTransaction().replace(
-//                        R.id.include,
-//                        phoneFrag,
-//                        phoneFrag.getTag()
-//                ).commit();
+        final File StadoMemoria = new File(rutaExterna[0]);
 
-                Toast.makeText(MainActivity.this,rutaExterna[0]+"/", Toast.LENGTH_LONG).show();
-                //Toast.makeText(MainActivity.this,rutaExterna[1], Toast.LENGTH_LONG).show();
-                //File manager SD External
+        if(Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")){
+            sdStorage.setVisibility(View.GONE);
+        }else {
+            sdStorage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                   // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
+                    //File manager SD External
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
                 startActivity(intent);
-            }
-        });
-
-//        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.blanco_switch);
-//
-//        switchCompat.setChecked(false);
-//        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView,
-//                                         boolean isChecked) {
-//            }
-//        });
-//
-//        //check the current state before we display the screen
-//        if (switchCompat.isChecked()) {
-//            Toast.makeText(MainActivity.this,
-//                    "Blanco", Toast.LENGTH_LONG).show();
-//        } else {
-//            Toast.makeText(MainActivity.this,
-//                    "Negro", Toast.LENGTH_LONG).show();
-//        }
-
+                }
+            });
+        }
     }
 
     @Override

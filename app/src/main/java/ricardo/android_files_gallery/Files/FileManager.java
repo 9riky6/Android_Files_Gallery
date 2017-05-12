@@ -50,7 +50,7 @@ public class FileManager extends AppCompatActivity{
 
             //Fem la imatge.
             ImageView imatge = (ImageView) rowLayout.findViewById(R.id.icono);
-            imatge.setImageResource(R.drawable.folder);
+            imatge.setImageResource(R.drawable.home);
 
             //Fem el nom.
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);

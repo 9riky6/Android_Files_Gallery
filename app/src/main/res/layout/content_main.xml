@@ -70,7 +70,8 @@
         android:layout_below="@id/phone_storage"
         android:layout_margin="4dp"
         android:background="@drawable/rounded_borders"
-        android:backgroundTint="#7b7878">
+        android:backgroundTint="#7b7878"
+        >
 
         <ImageView
             android:id="@+id/img_sd_storage"
