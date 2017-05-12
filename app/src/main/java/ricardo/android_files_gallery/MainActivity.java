@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long tamañosd = rutaExterna[0].length();
-                String mostrar = Long.toString(tamañosd);
+//                long tamañosd = rutaInterna.length();
+//                String mostrar = Long.toString(tamañosd);
 
-                //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
-                Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
 //            //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaInterna+"/"); //rutaInterna
@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                   // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
                     //File manager SD External
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna

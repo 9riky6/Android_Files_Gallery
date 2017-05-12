@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Arrays;
@@ -36,12 +37,13 @@ public class FileManager extends AppCompatActivity{
         path.setText(pathtemp);
         File file = new File(path.getText().toString());
 
-        TableLayout tabla = (TableLayout) findViewById(R.id.Contenido);
+        final TableLayout tabla = (TableLayout) findViewById(R.id.Contenido);
         tabla.removeAllViews();
 
-        boolean root = true;
-//Afegeix el directori .. pare
-        if (!(file.getAbsolutePath().equals("/"))){
+        boolean home = true;
+
+        //Afegeix el directori .. pare
+        if (!(file.getAbsolutePath().equals(pathtemp))){
             //Fem layout amb taula + inflater
             TableRow row = (TableRow) findViewById(R.id.Item);
             LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -50,23 +52,23 @@ public class FileManager extends AppCompatActivity{
 
             //Fem la imatge.
             ImageView imatge = (ImageView) rowLayout.findViewById(R.id.icono);
-            imatge.setImageResource(R.drawable.home);
+            imatge.setImageResource(R.drawable.ic_arrow_back_black_24dp);
 
             //Fem el nom.
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
-            cami.setText("Atras (..)");
+            cami.setText(pathtemp);
 //            cami.setTextSize(16);
 
             //Modifiquem el size i el type
             TextView type = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
-            size.setText("");
-            type.setText("Directori Anterior / pare");
+            size.setText("Cosas magicas 001");
+            type.setText("Atras <3");
 
             //Afegim la informació a la taula
             tabla.addView(rowLayout);
 
-            root = false;
+            home = false;
         }
         //Fa el ls. També introdueix imatge.
         final File[] children = file.listFiles();
@@ -120,15 +122,15 @@ public class FileManager extends AppCompatActivity{
                 extension.setText("Directori");
             }
 
-            //Aquest if es per no sobreescriure el directori ".." en cas de que no estiguem a la root
-            if (root)
+            //Aquest if es per no sobreescriure el directori ".." en cas de que no estiguem a la home
+            if (home)
                 tabla.addView(rowLayout);
             else
                 tabla.addView(rowLayout, i+1);
         }
         //Listener per navegar
         for(int i=0;i<tabla.getChildCount();i++){
-            final boolean finalRoot = root;
+            final boolean finalRoot = home;
             final int finalI = i;
             final int aux;
 
@@ -140,7 +142,6 @@ public class FileManager extends AppCompatActivity{
 
             tabla.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-
                     //Exclusiu al ..
                     if(!finalRoot && finalI == 0){
                         String cami = path.getText().toString();
@@ -163,6 +164,7 @@ public class FileManager extends AppCompatActivity{
                         startActivity(intent2);
                     }
                     else{
+                        //
                         Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                         intent2.putExtra("path",children[finalI+aux].getAbsolutePath());
                         startActivity(intent2);
@@ -170,8 +172,18 @@ public class FileManager extends AppCompatActivity{
                 }
             });
         }
-
+for(int i=0; i<tabla.getChildCount();i++){
+    final int finalI = i;
+    tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            Toast.makeText(FileManager.this,"Is long selected", Toast.LENGTH_LONG).show();
+            return true;
+        }
+    });
+}
 
     }
+
 
 }
