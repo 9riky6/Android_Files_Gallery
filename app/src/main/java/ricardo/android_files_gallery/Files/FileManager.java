@@ -36,7 +36,6 @@ public class FileManager extends AppCompatActivity{
 
         path.setText(pathtemp);
         File file = new File(path.getText().toString());
-
         final TableLayout tabla = (TableLayout) findViewById(R.id.Contenido);
         tabla.removeAllViews();
 
@@ -102,11 +101,8 @@ public class FileManager extends AppCompatActivity{
             if (children[i].isFile()){
                 //tamaño
                 long temp = children[i].length();
-                if (temp %1024 != 0)
-                    temp = temp/1024 + 1;
-                else
-                    temp = temp/1024;
-                size.setText(String.valueOf(temp)+" KB");
+                //PER MILLORAR
+                size.setText(TamanyFitxer(temp));
 
                 //tipo
                 String temp2 = children[i].getName();
@@ -114,11 +110,13 @@ public class FileManager extends AppCompatActivity{
                 if(temp2.contains("."))
                     extension.setText("Fitxer " + temp2.substring(temp2.lastIndexOf(".")+1));
 
-                else
+                else{
                     extension.setText("Fitxer");
+                }
             }
             else{
-                size.setText("");
+                //PER MILLORAR
+                size.setText(TamanyTotalfitxers(children[i].getAbsolutePath().toString()));
                 extension.setText("Directori");
             }
 
@@ -172,18 +170,59 @@ public class FileManager extends AppCompatActivity{
                 }
             });
         }
-for(int i=0; i<tabla.getChildCount();i++){
-    final int finalI = i;
-    tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View view) {
-            Toast.makeText(FileManager.this,"Is long selected", Toast.LENGTH_LONG).show();
-            return true;
-        }
-    });
-}
-
+    for(int i=0; i<tabla.getChildCount();i++){
+        final int finalI = i;
+        tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(FileManager.this,children[finalI-1].getName(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(), Toast.LENGTH_LONG).show();//falta la / al final
+                return true;
+            }
+        });
     }
 
+    }
+    //PER MILLORAR
 
+    public String TamanyTotalfitxers(String ruta){
+        File arxiu = new File (ruta);
+        //ESPAI TOTAL
+        String numero;//bytes
+        long auxNum = arxiu.getTotalSpace()-arxiu.getFreeSpace();//numero temporal per pasar el valors i fer la combercio
+        long num2 = arxiu.getTotalSpace()-arxiu.getFreeSpace() ;
+        if(num2%1024 != 0){ //kilobyte
+            numero = String.valueOf(auxNum)+" B";
+
+        }else if(num2%1024 == 0 && num2/1048576 ==0){
+
+            numero = String.valueOf(auxNum/1024)+" KB";
+
+        }else if(num2/1048576 !=0 && num2/1073741824 ==0){
+
+            numero = String.valueOf(auxNum/1048576)+" MB";
+
+        }else{
+
+            numero = String.valueOf(auxNum/1073741824)+" GB";
+        }
+        return numero;
+    }
+    public String  TamanyFitxer(long num){
+        int n = (int) num;
+        String valor= null;
+        if (num %1024 != 0 && num/1024 !=0) {
+            valor = String.valueOf(num)+" B";
+        }else /*if(n%1024 != 0 && n/1048576==0)*/{
+
+            valor = String.valueOf(num/1024)+" KB";
+
+        }/*else if(n%1048576 != 0 && n/1073741824==0) {
+
+            valor = String.valueOf(num / 1048576) + " MB";
+        }else{
+            valor = String.valueOf(num/1073741824)+" GB";
+        }*/
+        return valor;
+    }
 }
