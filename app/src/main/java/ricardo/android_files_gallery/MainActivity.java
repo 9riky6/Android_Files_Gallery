@@ -117,13 +117,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                   // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
                     //File manager SD External
-                Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(),FileManager.class);
+//                intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
+//                startActivity(intent);
                 }
             });
         }

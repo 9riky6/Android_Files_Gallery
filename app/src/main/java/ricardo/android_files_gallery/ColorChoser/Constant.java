@@ -1,6 +1,7 @@
 package ricardo.android_files_gallery.ColorChoser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import ricardo.android_files_gallery.R;
 
@@ -47,4 +48,7 @@ public class Constant implements Serializable {
     public static int teal = 0xff0088aa;
     public static int sky = 0xff0090d0;
     public static int tuquoise = 0xff06bbc2;
+
+    public ArrayList<Integer> Colores = new ArrayList<>();
+
 }
