@@ -52,6 +52,7 @@
             android:text="Espacio usado" />
 
         <TextView
+            android:id="@+id/InternoNumDisponible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

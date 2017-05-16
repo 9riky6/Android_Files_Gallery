@@ -34,6 +34,12 @@ import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
 import ricardo.android_files_gallery.Files.FileManager;
 
+/* convercion
+1 Kilobyte = 1,024 Bytes
+1 Megabyte = 1,048,576 Bytes
+1 Gigabyte = 1,073,741,824 Byte
+1 Terabyte = 1,099,511,627,776 Bytes
+*/
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
@@ -90,18 +96,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
-
+        final RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
+        final String numero = TamanyTotalMemoria(rutaInterna);
 
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long tamañosd = rutaExterna[0].length();
-                String mostrar = Long.toString(tamañosd);
-
+                Toast.makeText(MainActivity.this,numero ,Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
-                Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
-//            //File manager <3
+                //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
+                //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaInterna+"/"); //rutaInterna
                 startActivity(intent);
@@ -109,24 +113,28 @@ public class MainActivity extends AppCompatActivity
         });
         RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
         final File StadoMemoria = new File(rutaExterna[0]);
+        final String numero1 = TamanyTotalMemoria(rutaExterna[0]);
 
-        if(Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")){
-            sdStorage.setVisibility(View.GONE);
-        }else {
-            sdStorage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
 
-//                    Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
-                    //File manager SD External
-//                Intent intent = new Intent(getApplicationContext(),FileManager.class);
-//                intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
-//                startActivity(intent);
+                // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
+                if(Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")){
+                    sdStorage.setVisibility(View.GONE);
+                }else {
+                    sdStorage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(MainActivity.this,numero1 ,Toast.LENGTH_LONG).show();
+                           // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+                           // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
+
+                            //File manager SD External
+                                    Intent intent = new Intent(getApplicationContext(),FileManager.class);
+                                    intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
+                                    startActivity(intent);
+                        }
+                    });
                 }
-            });
-        }
     }
 
     @Override
@@ -135,7 +143,6 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
@@ -145,7 +152,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -261,5 +267,27 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+    public String TamanyTotalMemoria(String ruta){
+        File arxiu = new File (ruta);
+        //ESPAI TOTAL
+        String numero = null;//bytes
+        long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
+        if(arxiu.getTotalSpace()%1024 != 0){ //kilobyte
+            numero = String.valueOf(auxNum)+" B";
+
+        }else if(arxiu.getTotalSpace()%1024 == 0 && arxiu.getTotalSpace()/1048576 ==0){
+
+            numero = String.valueOf(auxNum/1024)+" KB";
+
+        }else if(arxiu.getTotalSpace()/1048576 !=0 && arxiu.getTotalSpace()/1073741824 ==0){
+
+            numero = String.valueOf(auxNum/1048576)+" MB";
+
+        }else{
+
+            numero = String.valueOf(auxNum/1073741824)+" GB";
+        }
+        return numero;
     }
 }

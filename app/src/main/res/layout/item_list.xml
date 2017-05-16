@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/todoItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -20,6 +21,7 @@
             app:srcCompat="@drawable/folder" />
 
         <LinearLayout
+            android:id="@+id/ItemInfoText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
@@ -45,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Size"
-                android:textAlignment="textEnd"
+                android:textAlignment="textStart"
                 android:textSize="12sp" />
 
         </LinearLayout>
