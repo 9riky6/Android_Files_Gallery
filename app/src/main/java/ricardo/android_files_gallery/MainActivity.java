@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity
     private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
     private boolean load = true;
     TextView InternalStorage, ExternalStorage;
-    private String rutaInterna = null;
-    private String[] rutaExterna = null;
+    public static String rutaInterna = null;
+    public static String[] rutaExterna = null;
     private boolean Permisions = false;
 
     @Override
@@ -194,11 +194,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.phone_storage) {
-            Toast.makeText(this, "PHONE Menu", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", rutaInterna + "/"); //rutaInterna
+            startActivity(intent);
         } else if (id == R.id.sd_storage) {
-            Toast.makeText(this, "SD Menu", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
+            startActivity(intent);
         } else if (id == R.id.nav_galeria) {
-            Toast.makeText(this, "GALERIA", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+            intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
+            startActivity(intent);
         } else if (id == R.id.nav_apariencia) {
             Intent searchIntent = new Intent(MainActivity.this, ColorinesActivity.class);
             startActivity(searchIntent);
