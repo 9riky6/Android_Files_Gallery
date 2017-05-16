@@ -26,7 +26,8 @@
             android:label="Apariencia"/>
         <activity
             android:name=".Files.FileManager"
-            android:label="managerFile">
+            android:label="managerFile"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

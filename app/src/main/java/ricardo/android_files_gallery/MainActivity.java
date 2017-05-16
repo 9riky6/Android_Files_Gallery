@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
                 //File manager <3
                 Intent intent = new Intent(getApplicationContext(),FileManager.class);
                 intent.putExtra("path",rutaInterna+"/"); //rutaInterna
+                intent.putExtra("root",rutaInterna+"/");//root
                 startActivity(intent);
             }
         });
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity
                             //File manager SD External
                                     Intent intent = new Intent(getApplicationContext(),FileManager.class);
                                     intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
+                                    intent.putExtra("root",rutaExterna[0]+"/");//root
                                     startActivity(intent);
                         }
                     });

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +32,15 @@ public class FileManager extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+  final  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Aixo fa que sempre deixi la ultima barra
         String pathtemp = intent.getStringExtra("path");
         pathtemp = pathtemp.substring(0, pathtemp.lastIndexOf("/") + 1);
-
+        getSupportActionBar().setTitle(pathtemp);
 
         File file = new File(pathtemp);
         final TableLayout tabla = (TableLayout) findViewById(R.id.Contenido);
@@ -126,6 +131,7 @@ public class FileManager extends AppCompatActivity {
             else
                 tabla.addView(rowLayout, i + 1);
         }
+
         //Listener per navegar
         for (int i = 0; i < tabla.getChildCount(); i++) {
             final boolean finalRoot = home;
@@ -158,14 +164,13 @@ public class FileManager extends AppCompatActivity {
                     }
                     //Suposant que sigui un directori
                     else if (children[finalI + aux].isDirectory()) {
-                        Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                        intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
-                        startActivity(intent2);
-                    } else {
-                        //
-                        Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
-                        intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
-                        startActivity(intent2);
+                            Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                            intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
+                            startActivity(intent2);
+                        } else {
+                            Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                            intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
+                            startActivity(intent2);
                     }
                 }
             });
