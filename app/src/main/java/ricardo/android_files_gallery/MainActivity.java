@@ -1,10 +1,13 @@
 package ricardo.android_files_gallery;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,16 +44,19 @@ import ricardo.android_files_gallery.Files.FileManager;
 1 Terabyte = 1,099,511,627,776 Bytes
 */
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
     private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
-    private boolean load=true;
-    TextView InternalStorage , ExternalStorage;
-    private String rutaInterna= null;
-    private String[] rutaExterna=null;
+    private boolean load = true;
+    TextView InternalStorage, ExternalStorage;
+    private String rutaInterna = null;
+    private String[] rutaExterna = null;
+    private boolean Permisions = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isStoragePermissionGranted();
         Database database = new Database(this);
         Integer color = null;
         try {
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
-        if(color == null){
+        if (color == null) {
             try {
                 database.putInt(DBAccess.COLOR, Constant.sky);
             } catch (SnappydbException e) {
@@ -73,10 +79,11 @@ public class MainActivity extends AppCompatActivity
         setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        rutaInterna=RutaInterna();
-        rutaExterna=RutaExterna();
+        rutaInterna = RutaInterna();
+        rutaExterna = RutaExterna();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -102,12 +109,12 @@ public class MainActivity extends AppCompatActivity
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,numero ,Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, numero, Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
                 //File manager <3
-                Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                intent.putExtra("path",rutaInterna+"/"); //rutaInterna
+                Intent intent = new Intent(getApplicationContext(), FileManager.class);
+                intent.putExtra("path", rutaInterna + "/"); //rutaInterna
                 startActivity(intent);
             }
         });
@@ -116,25 +123,51 @@ public class MainActivity extends AppCompatActivity
         final String numero1 = TamanyTotalMemoria(rutaExterna[0]);
 
 
+        // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
+        if (Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")) {
+            sdStorage.setVisibility(View.GONE);
+        } else {
+            sdStorage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, numero1, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
 
-                // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
-                if(Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")){
-                    sdStorage.setVisibility(View.GONE);
-                }else {
-                    sdStorage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(MainActivity.this,numero1 ,Toast.LENGTH_LONG).show();
-                           // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
-                           // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
-
-                            //File manager SD External
-                                    Intent intent = new Intent(getApplicationContext(),FileManager.class);
-                                    intent.putExtra("path",rutaExterna[0]+"/"); //rutaInterna
-                                    startActivity(intent);
-                        }
-                    });
+                    //File manager SD External
+                    Intent intent = new Intent(getApplicationContext(), FileManager.class);
+                    intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
+                    startActivity(intent);
                 }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v("TAG", "Permission: " + permissions[0] + "was " + grantResults[0]);
+            //resume tasks needing this permission
+        }
+    }
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("Permision granted", "okey");
+                return true;
+            } else {
+
+                Log.v("Permision revoked", "fuck");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("Permision is granted", "YES");
+            return true;
+        }
     }
 
     @Override
@@ -143,15 +176,17 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -168,9 +203,9 @@ public class MainActivity extends AppCompatActivity
             Intent searchIntent = new Intent(MainActivity.this, ColorinesActivity.class);
             startActivity(searchIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        } else if(id == R.id.about_us) {
+        } else if (id == R.id.about_us) {
             Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
-        }else if (id == R.id.blanco_switch) {
+        } else if (id == R.id.blanco_switch) {
 
         }
 
@@ -178,23 +213,24 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private String RutaInterna() {
-        String ruta=null;
+        String ruta = null;
         InternalStorage = (TextView) findViewById(R.id.textTituloInter);
-       // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
+        // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
 
         String IntStorage;
 
         IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
         ruta = IntStorage;
-        if(IntStorage.contains("sdcard"))
-        {
+        if (IntStorage.contains("sdcard")) {
             InternalStorage.setText("Phone Storage <3");
         }
         //Falta posar la SD
         return ruta;
     }
-    private String[] RutaExterna(){
+
+    private String[] RutaExterna() {
         // Final set of paths
         final Set<String> rv = new HashSet<String>();
         // Primary physical SD-CARD (not emulated)
@@ -203,63 +239,48 @@ public class MainActivity extends AppCompatActivity
         final String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
         // Primary emulated SD-CARD
         final String rawEmulatedStorageTarget = System.getenv("EMULATED_STORAGE_TARGET");
-        if(TextUtils.isEmpty(rawEmulatedStorageTarget))
-        {
+        if (TextUtils.isEmpty(rawEmulatedStorageTarget)) {
             // Device has physical external storage; use plain paths.
-            if(TextUtils.isEmpty(rawExternalStorage))
-            {
+            if (TextUtils.isEmpty(rawExternalStorage)) {
                 // EXTERNAL_STORAGE undefined; falling back to default.
                 rv.add("/storage/sdcard0");
-            }
-            else
-            {
+            } else {
                 rv.add(rawExternalStorage);
             }
-        }
-        else
-        {
+        } else {
             // Device has emulated storage; external storage paths should have
             // userId burned into them.
             final String rawUserId;
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
-            {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 rawUserId = "";
-            }
-            else
-            {
+            } else {
                 final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                 final String[] folders = DIR_SEPORATOR.split(path);
                 final String lastFolder = folders[folders.length - 1];
                 boolean isDigit = false;
-                try
-                {
+                try {
                     Integer.valueOf(lastFolder);
                     isDigit = true;
-                }
-                catch(NumberFormatException ignored)
-                {
+                } catch (NumberFormatException ignored) {
                 }
                 rawUserId = isDigit ? lastFolder : "";
             }
             // /storage/emulated/0[1,2,...]
-            if(TextUtils.isEmpty(rawUserId))
-            {
+            if (TextUtils.isEmpty(rawUserId)) {
                 rv.add(rawEmulatedStorageTarget);
-            }
-            else
-            {
+            } else {
                 rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
             }
         }
         // Add all secondary storages
-        if(!TextUtils.isEmpty(rawSecondaryStoragesStr))
-        {
+        if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
             // All Secondary SD-CARDs splited into array
             final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
             Collections.addAll(rv, rawSecondaryStorages);
         }
         return rv.toArray(new String[rv.size()]);
     }
+
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -268,25 +289,26 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    public String TamanyTotalMemoria(String ruta){
-        File arxiu = new File (ruta);
+
+    public String TamanyTotalMemoria(String ruta) {
+        File arxiu = new File(ruta);
         //ESPAI TOTAL
         String numero = null;//bytes
         long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
-        if(arxiu.getTotalSpace()%1024 != 0){ //kilobyte
-            numero = String.valueOf(auxNum)+" B";
+        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
+            numero = String.valueOf(auxNum) + " B";
 
-        }else if(arxiu.getTotalSpace()%1024 == 0 && arxiu.getTotalSpace()/1048576 ==0){
+        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
 
-            numero = String.valueOf(auxNum/1024)+" KB";
+            numero = String.valueOf(auxNum / 1024) + " KB";
 
-        }else if(arxiu.getTotalSpace()/1048576 !=0 && arxiu.getTotalSpace()/1073741824 ==0){
+        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
 
-            numero = String.valueOf(auxNum/1048576)+" MB";
+            numero = String.valueOf(auxNum / 1048576) + " MB";
 
-        }else{
+        } else {
 
-            numero = String.valueOf(auxNum/1073741824)+" GB";
+            numero = String.valueOf(auxNum / 1073741824) + " GB";
         }
         return numero;
     }

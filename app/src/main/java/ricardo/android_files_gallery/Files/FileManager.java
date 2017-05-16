@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,10 @@ public class FileManager extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Aixo fa que sempre deixi la ultima barra
         String pathtemp = intent.getStringExtra("path");
         pathtemp = pathtemp.substring(0, pathtemp.lastIndexOf("/") + 1);
