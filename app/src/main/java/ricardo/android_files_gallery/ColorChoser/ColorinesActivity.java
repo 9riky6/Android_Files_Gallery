@@ -7,13 +7,19 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import ricardo.android_files_gallery.Files.FileManager;
+import ricardo.android_files_gallery.GalleryActivity;
 import ricardo.android_files_gallery.MainActivity;
 import ricardo.android_files_gallery.R;
 
@@ -22,7 +28,7 @@ import ricardo.android_files_gallery.R;
  * Created by Ricardo on 07/05/2017.
  */
 
-public class ColorinesActivity extends AppCompatActivity {
+public class ColorinesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Button button;
     Methods methods;
 
@@ -32,12 +38,10 @@ public class ColorinesActivity extends AppCompatActivity {
         setTheme(Constant.theme);
         setContentView(R.layout.colories);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_colorines);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        toolbar.setTitle("Colorines");
-//        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), Constant.color));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         methods = new Methods();
         button = (Button) findViewById(R.id.colorines_boton);
@@ -87,5 +91,37 @@ public class ColorinesActivity extends AppCompatActivity {
         d.getPaint().setColor(ContextCompat.getColor(getApplicationContext(), Constant.color));
 
         button.setBackground(d);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.phone_storage) {
+            Intent intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", MainActivity.rutaInterna + "/"); //rutaInterna
+            startActivity(intent);
+        } else if (id == R.id.sd_storage) {
+            Intent intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", MainActivity.rutaExterna[0] + "/"); //rutaInterna
+            startActivity(intent);
+        } else if (id == R.id.nav_galeria) {
+            Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_apariencia) {
+            Intent searchIntent = new Intent(ColorinesActivity.this, ColorinesActivity.class);
+            startActivity(searchIntent);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        } else if (id == R.id.about_us) {
+            Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.blanco_switch) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

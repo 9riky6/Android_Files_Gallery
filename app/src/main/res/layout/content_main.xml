@@ -14,8 +14,7 @@
         android:background="@drawable/rounded_borders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:backgroundTint="#7b7878">
+        android:layout_margin="4dp">
 
         <ImageView
             android:id="@+id/img_phone_storage"

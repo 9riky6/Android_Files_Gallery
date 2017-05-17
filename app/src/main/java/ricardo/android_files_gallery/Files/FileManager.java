@@ -32,11 +32,10 @@ public class FileManager extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-  final  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         //Aixo fa que sempre deixi la ultima barra
         String pathtemp = intent.getStringExtra("path");
         pathtemp = pathtemp.substring(0, pathtemp.lastIndexOf("/") + 1);
@@ -131,7 +130,6 @@ public class FileManager extends AppCompatActivity {
             else
                 tabla.addView(rowLayout, i + 1);
         }
-
         //Listener per navegar
         for (int i = 0; i < tabla.getChildCount(); i++) {
             final boolean finalRoot = home;

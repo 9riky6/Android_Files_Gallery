@@ -94,7 +94,6 @@ public class ColorChooserDialog extends Dialog{
         twentysix = (ImageButton)findViewById(R.id.b26);
         twentyseven = (ImageButton)findViewById(R.id.b27);
         twentyeight =   (ImageButton)findViewById(R.id.b28);
-//        twentyOne =(Button)findViewById(R.id.b21);
 
 
 
@@ -168,8 +167,6 @@ public class ColorChooserDialog extends Dialog{
             ColorizeOld();
         }
 
-//        twentyOne.setVisibility(View.INVISIBLE);
-
         setListeners();
     }
 
@@ -187,15 +184,13 @@ public class ColorChooserDialog extends Dialog{
             buttons.get(i).setTag(colors.get(i));
             buttons.get(i).setOnClickListener(listener);
         }
-//        twentyOne.setTag(colors.get(20));
-//        twentyOne.setOnClickListener(listener);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void Colorize() {
         for (int i = 0; i < buttons.size(); i++) {
             ShapeDrawable d = new ShapeDrawable(new OvalShape());
-            d.setBounds(58, 58, 58, 58);
+            d.setBounds(32, 32, 32, 32);
             Log.e("Shape drown no", i + "");
             buttons.get(i).setVisibility(View.INVISIBLE);
 
@@ -212,7 +207,7 @@ public class ColorChooserDialog extends Dialog{
             ShapeDrawable d = new ShapeDrawable(new OvalShape());
             d.getPaint().setColor(colors.get(i));
             d.getPaint().setStrokeWidth(1f);
-            d.setBounds(58, 58, 58, 58);
+            d.setBounds(32, 32, 32, 32);
             buttons.get(i).setVisibility(View.INVISIBLE);
                 d.getPaint().setStyle(Paint.Style.FILL);
                 d.getPaint().setColor(colors.get(i));
@@ -276,6 +271,4 @@ public class ColorChooserDialog extends Dialog{
     public void setColorListener(ColorListener listener){
         this.myColorListener = listener;
     }
-
-
 }
