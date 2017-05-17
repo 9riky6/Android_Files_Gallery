@@ -34,10 +34,13 @@ public class FileManager extends AppCompatActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         //Aixo fa que sempre deixi la ultima barra
-        String pathtemp = intent.getStringExtra("path");
+        String pathtemp = intent.getStringExtra("path");//actual
+        final String pathPare = intent.getStringExtra("root");//pare
+
         pathtemp = pathtemp.substring(0, pathtemp.lastIndexOf("/") + 1);
         getSupportActionBar().setTitle(pathtemp);
 
@@ -47,6 +50,7 @@ public class FileManager extends AppCompatActivity {
 
         boolean home = true;
 
+        //TODO: AÑADIR LAYOUT SOLO PARA EL ATRAS. IMG AND TEXT
         //Afegeix el directori .. pare
         if (!(file.getAbsolutePath().equals(pathtemp))) {
             //Fem layout amb taula + inflater
@@ -62,19 +66,19 @@ public class FileManager extends AppCompatActivity {
             //Fem el nom.
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
             cami.setText(pathtemp);
-//            cami.setTextSize(16);
 
             //Modifiquem el size i el type
             TextView type = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
-            size.setText("Cosas magicas 001");
-            type.setText("Atras <3");
+            size.setText("");
+            type.setText("<3");
 
             //Afegim la informació a la taula
             tabla.addView(rowLayout);
 
             home = false;
         }
+
         //Fa el ls. També introdueix imatge.
         final File[] children = file.listFiles();
         Arrays.sort(children);
@@ -97,12 +101,13 @@ public class FileManager extends AppCompatActivity {
             //Fem el nom.
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
             cami.setText(children[i].getName());
-            // cami.setTextSize(16);
+
 
             //Si es un fitxer, que indiqui la mida i el tipus de fitxer
             //Si es un directori, que indiqui que ho es i el pesa.
             TextView extension = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
+
             if (children[i].isFile()) {//arxiu
                 //tamaño
                 long temp = children[i].length();
@@ -111,7 +116,7 @@ public class FileManager extends AppCompatActivity {
 
                 //tipo
                 String temp2 = children[i].getName();
-                Log.d("nombre ",temp2);
+                Log.d("nombre ", temp2);
                 if (temp2.contains(".")) {
                     extension.setText("Fitxer " + temp2.substring(temp2.lastIndexOf(".") + 1));
                     getImatge(temp2, imatge);
@@ -145,30 +150,41 @@ public class FileManager extends AppCompatActivity {
             final String finalPathtemp = pathtemp;
             tabla.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    //Exclusiu al ..
-                    if (!finalRoot && finalI == 0) {
+                    //Exclusiu Atras
+                    if (!finalRoot && finalI == 0) {//cliquem atras.
                         String cami = finalPathtemp;
+                        if(cami.equalsIgnoreCase(pathPare)){
+                            Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                            intent2.putExtra("path", cami);
+                            intent2.putExtra("root",pathPare);
+                            startActivity(intent2);
 
-                        //Si acaba amb una barra, la treu
-                        if (cami.charAt(cami.length() - 1) == '/')
+                        }else if (cami.charAt(cami.length() - 1) == '/') {//Si acaba amb una barra, la treu
                             cami = cami.substring(0, cami.length() - 1);
 
-                        //Agafa tot el path fins la ultima barra, inclosa
-                        cami = cami.substring(0, cami.lastIndexOf("/") + 1);
+                            //Agafa tot el path fins la ultima barra, inclosa
+                            cami = cami.substring(0, cami.lastIndexOf("/") + 1);
 
-                        Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                        intent2.putExtra("path", cami);
-                        startActivity(intent2);
+                            Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                            intent2.putExtra("root",pathPare);
+                            intent2.putExtra("path", cami);
+                            startActivity(intent2);
+                        }
+
                     }
                     //Suposant que sigui un directori
                     else if (children[finalI + aux].isDirectory()) {
-                            Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                            intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
-                            startActivity(intent2);
-                        } else {
-                            Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
-                            intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
-                            startActivity(intent2);
+                        Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                        intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
+                        intent2.putExtra("root",pathPare);
+                        startActivity(intent2);
+                    } else {
+                        //intent esplicit per cada arxiu.
+                        //TODO: POSAR INTENTS IMPLICITS!!!
+                        Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                        intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
+                        intent2.putExtra("root",pathPare);
+                        startActivity(intent2);
                     }
                 }
             });
@@ -180,12 +196,15 @@ public class FileManager extends AppCompatActivity {
                 public boolean onLongClick(View view) {
                     Toast.makeText(FileManager.this, children[finalI - 1].getName(), Toast.LENGTH_LONG).show();
                     // Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(), Toast.LENGTH_LONG).show();//falta la / al final
+                    //Posar drawable amb el color del selectet.
+                    tabla.getChildAt(finalI).setBackgroundResource(R.drawable.clicked_gray);
                     return true;
                 }
             });
         }
 
     }
+
     private void getImatge(String name, ImageView imatge) {
         String extencionFile = name.substring(name.lastIndexOf(".") + 1);
         Log.d("Contenido extencionFile", extencionFile);
@@ -317,12 +336,37 @@ public class FileManager extends AppCompatActivity {
             imatge.setImageResource(R.drawable.aac);
 
         } else if (extencionFile.equalsIgnoreCase(("docx"))) {
-            //TODO: <3 FALATA INCONO
-            //imatge.setImageResource(R.drawable.docx);
-        } else {
-           imatge.setImageResource(R.drawable.unknown);
+
+            imatge.setImageResource(R.drawable.docx);
+        } else if (extencionFile.equalsIgnoreCase(("odt"))) {
+
+            imatge.setImageResource(R.drawable.odt);
+        } else if (extencionFile.equalsIgnoreCase(("m4a"))) {
+
+            imatge.setImageResource(R.drawable.m4a);
+        } else if (extencionFile.equalsIgnoreCase(("jar"))) {
+
+        imatge.setImageResource(R.drawable.jar);
+        }else if (extencionFile.equalsIgnoreCase(("jad"))) {
+
+            imatge.setImageResource(R.drawable.jad);
+        }else if (extencionFile.equalsIgnoreCase(("vcf"))) {
+
+            imatge.setImageResource(R.drawable.vcf);
+        }else if (extencionFile.equalsIgnoreCase(("mp4"))) {
+
+            imatge.setImageResource(R.drawable.mp4);
+        }else if (extencionFile.equalsIgnoreCase(("jpeg"))) {
+
+            imatge.setImageResource(R.drawable.jpeg);
+        }else if (extencionFile.equalsIgnoreCase(("opus"))) {
+
+            imatge.setImageResource(R.drawable.opus);
+        }else {
+            imatge.setImageResource(R.drawable.unknown);
         }
     }
+
     //PER MILLORAR mirar lo de les carpetes.
     public String getSize(String ruta) {//directori/carpeta
         DecimalFormat df = new DecimalFormat("####");

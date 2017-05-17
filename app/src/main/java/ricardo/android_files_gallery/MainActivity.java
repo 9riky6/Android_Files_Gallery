@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity
                 //File manager <3
                 Intent intent = new Intent(getApplicationContext(), FileManager.class);
                 intent.putExtra("path", rutaInterna + "/"); //rutaInterna
+                intent.putExtra("root", rutaInterna + "/");
                 startActivity(intent);
             }
         });
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 
 
         // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
-        if (Environment.getExternalStorageState(StadoMemoria).toString().equalsIgnoreCase("removed")) {
+        if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
             sdStorage.setVisibility(View.GONE);
         } else {
             sdStorage.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity
                     //File manager SD External
                     Intent intent = new Intent(getApplicationContext(), FileManager.class);
                     intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
+                    intent.putExtra("root", rutaExterna[0] + "/");
                     startActivity(intent);
                 }
             });
@@ -232,7 +234,7 @@ public class MainActivity extends AppCompatActivity
         if (IntStorage.contains("sdcard")) {
             InternalStorage.setText("Phone Storage <3");
         }
-        //Falta posar la SD
+
         return ruta;
     }
 
