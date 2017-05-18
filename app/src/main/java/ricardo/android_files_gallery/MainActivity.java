@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,6 +35,7 @@ import ricardo.android_files_gallery.ColorChoser.Methods;
 import ricardo.android_files_gallery.Database.DBAccess;
 import ricardo.android_files_gallery.Database.Database;
 import ricardo.android_files_gallery.Files.FileManager;
+import ricardo.android_files_gallery.Permission.AbsRuntimePermision;
 
 /* convercion
 1 Kilobyte = 1,024 Bytes
@@ -43,9 +43,10 @@ import ricardo.android_files_gallery.Files.FileManager;
 1 Gigabyte = 1,073,741,824 Byte
 1 Terabyte = 1,099,511,627,776 Bytes
 */
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AbsRuntimePermision
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
+    private static final int REQUEST_PERMISSION = 10;
     private boolean load = true;
     TextView InternalStorage, ExternalStorage;
     public static String rutaInterna = null;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isStoragePermissionGranted();
+//        isStoragePermissionGranted();
         Database database = new Database(this);
         Integer color = null;
         try {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
+        requestAppPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},R.string.msg,REQUEST_PERMISSION);
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -143,6 +145,11 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+
     }
 
     @Override
