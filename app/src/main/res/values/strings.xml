@@ -82,4 +82,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="msg">Mensaje</string>
 </resources>
