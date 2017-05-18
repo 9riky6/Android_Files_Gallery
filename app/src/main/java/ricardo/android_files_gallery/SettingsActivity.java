@@ -4,18 +4,26 @@ package ricardo.android_files_gallery;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -38,217 +46,243 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+    public static final String TAG = "Settings";
 
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
+    private static final int FRAGMENT_OPEN = 99;
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
+    private static final String EXTRA_RECREATE = "recreate";
+    public static final String KEY_ADVANCED_DEVICES = "advancedDevices";
+    public static final String KEY_FILE_SIZE = "fileSize";
+    public static final String KEY_FOLDER_SIZE = "folderSize";
+    public static final String KEY_FILE_THUMBNAIL = "fileThumbnail";
+    public static final String KEY_FILE_HIDDEN = "fileHidden";
+    private static final String KEY_PIN = "pin";
+    public static final String KEY_PIN_ENABLED = "pin_enable";
+    public static final String KEY_PIN_SET = "pin_set";
+    public static final String KEY_ROOT_MODE = "rootMode";
+    public static final String KEY_PRIMARY_COLOR = "primaryColor";
+    public static final String KEY_ACCENT_COLOR = "accentColor";
+    public static final String KEY_THEME_STYLE = "themeStyle";
+    public static final String KEY_FOLDER_ANIMATIONS = "folderAnimations";
+    public static final String KEY_RECENT_MEDIA = "recentMedia";
 
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
+    private Resources res;
+    private int actionBarColor;
+    private final Handler handler = new Handler();
+    private Drawable oldBackground;
+    private boolean mRecreate = false;
 
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    public static boolean getDisplayAdvancedDevices(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_ADVANCED_DEVICES, true);
     }
 
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+    public static boolean getDisplayFileSize(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_FILE_SIZE, true);
+    }
 
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+    public static boolean getDisplayFolderSize(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_FOLDER_SIZE, false);
+    }
+
+    public static boolean getDisplayFileThumbnail(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_FILE_THUMBNAIL, true);
+    }
+
+    public static boolean getDisplayFileHidden(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_FILE_HIDDEN, false);
+    }
+
+    public static boolean getDisplayRecentMedia() {
+        return PreferenceManager.getDefaultSharedPreferences(DocumentsApplication.getInstance().getBaseContext())
+                .getBoolean(KEY_RECENT_MEDIA, true);
+    }
+
+    public static boolean getRootMode(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_ROOT_MODE, true);
+    }
+
+    public static int getPrimaryColor(Context context) {
+        int newColor = ContextCompat.getColor(context, R.color.defaultColor);
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getInt(KEY_PRIMARY_COLOR, newColor);
+    }
+
+    public static int getPrimaryColor() {
+        return PreferenceManager.getDefaultSharedPreferences(DocumentsApplication.getInstance().getBaseContext())
+                .getInt(KEY_PRIMARY_COLOR, Color.parseColor("#0288D1"));
+    }
+
+    public static int getAccentColor() {
+        return PreferenceManager.getDefaultSharedPreferences(DocumentsApplication.getInstance().getBaseContext())
+                .getInt(KEY_ACCENT_COLOR, Color.parseColor("#EF3A0F"));
+    }
+
+    public static void setAccentColor(int color) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(DocumentsApplication.getInstance().getBaseContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(KEY_ACCENT_COLOR, color);
+        editor.commit();
+    }
+
+    public static String getThemeStyle() {
+        return PreferenceManager.getDefaultSharedPreferences(DocumentsApplication.getInstance().getBaseContext())
+                .getString(KEY_THEME_STYLE, "1");
+    }
+
+    public static boolean getFolderAnimation(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(KEY_FOLDER_ANIMATIONS, false);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        changeActionBarColor(0);
+        res = getResources();
+        actionBarColor = getPrimaryColor(this);
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
-    /**
-     * This method stops fragment injection in malicious applications.
-     * Make sure to deny any unknown fragments here.
-     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected boolean isValidFragment(String fragmentName) {
-        return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+        return true;
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
+    public static final boolean isPinEnabled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_PIN_ENABLED, false)
+                && isPinProtected(context);
+    }
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+    public static final boolean isPinProtected(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PIN, "") != "";
+    }
+
+    public static void setPin(Context context, String pin) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(KEY_PIN, hashKeyForPIN(pin)).commit();
+    }
+
+    public static boolean checkPin(Context context, String pin) {
+        pin = hashKeyForPIN(pin);
+        String hashed = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PIN, "");
+        if (TextUtils.isEmpty(pin))
+            return TextUtils.isEmpty(hashed);
+        return pin.equals(hashed);
+    }
+
+    private static String hashKeyForPIN(String value) {
+        if (TextUtils.isEmpty(value))
+            return null;
+        try {
+            //MessageDigest digester = MessageDigest.getInstance("MD5");
+            //return Base64.encodeToString(value.getBytes(), Base64.DEFAULT);
         }
+        catch (Exception e) {
+            CrashReportingManager.logException(e);
+        }
+        return value;
+    }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+/*    public static String hashKeyForPIN(String key) {
+        String cacheKey = key;
+        try {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(key.getBytes());
+            cacheKey = bytesToHexString(mDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(key.hashCode());
+        }
+        cacheKey = Base64.encodeToString(key.getBytes(), Base64.DEFAULT);
+        return cacheKey;
+    }*/
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        changeActionBarColor(0);
+    }
+
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivityForResult(intent, FRAGMENT_OPEN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == FRAGMENT_OPEN){
+            if(resultCode == RESULT_FIRST_USER){
+                recreate();
             }
-            return super.onOptionsItemSelected(item);
         }
     }
 
-    /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
+    @Override
+    public void recreate() {
+        mRecreate = true;
+        super.recreate();
+    }
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        }
+    @Override
+    public String getTag() {
+        return TAG;
+    }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(EXTRA_RECREATE, true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        if(state.getBoolean(EXTRA_RECREATE)){
+            setResult(RESULT_FIRST_USER);
         }
     }
 
-    /**
-     * This fragment shows data and sync preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class DataSyncPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
-            setHasOptionsMenu(true);
+    public void changeActionBarColor(int newColor) {
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+        int color = newColor != 0 ? newColor : SettingsActivity.getPrimaryColor(this);
+        Drawable colorDrawable = new ColorDrawable(color);
+
+        if (oldBackground == null) {
+            getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+        } else {
+            TransitionDrawable td = new TransitionDrawable(new Drawable[] { oldBackground, colorDrawable });
+            getSupportActionBar().setBackgroundDrawable(td);
+            td.startTransition(200);
         }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
+        oldBackground = colorDrawable;
     }
+
+    public static void logSettingEvent(String key){
+        AnalyticsManager.logEvent("settings_"+key.toLowerCase());
+    }
+
 }
