@@ -79,22 +79,17 @@ public class MainActivity extends AbsRuntimePermision
 
         setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
-        requestAppPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},R.string.msg,REQUEST_PERMISSION);
+
+        requestAppPermissions(new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                R.string.msg, REQUEST_PERMISSION);
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rutaInterna = RutaInterna();
         rutaExterna = RutaExterna();
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -105,13 +100,18 @@ public class MainActivity extends AbsRuntimePermision
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+
         final RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
-        final String numero = TamanyTotalMemoria(rutaInterna);
+//        final String numero = TamanyTotalMemoria(rutaInterna);
 
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, numero, Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, numero, Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
                 //File manager <3
@@ -122,35 +122,33 @@ public class MainActivity extends AbsRuntimePermision
             }
         });
         RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
-        final File StadoMemoria = new File(rutaExterna[0]);
-        final String numero1 = TamanyTotalMemoria(rutaExterna[0]);
+        if (rutaExterna != null) {
+            final File StadoMemoria = new File(rutaExterna[0]);
+//        final String numero1 = TamanyTotalMemoria(rutaExterna[0]);
 
 
-        // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
-        if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
-            sdStorage.setVisibility(View.GONE);
-        } else {
-            sdStorage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, numero1, Toast.LENGTH_LONG).show();
-                    // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
-                    // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
+            // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
+            if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
+                sdStorage.setVisibility(View.GONE);
+            } else {
+                sdStorage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                    Toast.makeText(MainActivity.this, numero1, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+                        // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
 
-                    //File manager SD External
-                    Intent intent = new Intent(getApplicationContext(), FileManager.class);
-                    intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
-                    intent.putExtra("root", rutaExterna[0] + "/");
-                    startActivity(intent);
-                }
-            });
+                        //File manager SD External
+                        Intent intent = new Intent(getApplicationContext(), FileManager.class);
+                        intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
+                        intent.putExtra("root", rutaExterna[0] + "/");
+                        startActivity(intent);
+                    }
+                });
+            }
         }
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode) {
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -305,26 +303,26 @@ public class MainActivity extends AbsRuntimePermision
         }
     }
 
-    public String TamanyTotalMemoria(String ruta) {
-        File arxiu = new File(ruta);
-        //ESPAI TOTAL
-        String numero = null;//bytes
-        long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
-        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
-            numero = String.valueOf(auxNum) + " B";
-
-        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
-
-            numero = String.valueOf(auxNum / 1024) + " KB";
-
-        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
-
-            numero = String.valueOf(auxNum / 1048576) + " MB";
-
-        } else {
-
-            numero = String.valueOf(auxNum / 1073741824) + " GB";
-        }
-        return numero;
-    }
+//    public String TamanyTotalMemoria(String ruta) {
+//        File arxiu = new File(ruta);
+//        //ESPAI TOTAL
+//        String numero = null;//bytes
+//        long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
+//        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
+//            numero = String.valueOf(auxNum) + " B";
+//
+//        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
+//
+//            numero = String.valueOf(auxNum / 1024) + " KB";
+//
+//        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
+//
+//            numero = String.valueOf(auxNum / 1048576) + " MB";
+//
+//        } else {
+//
+//            numero = String.valueOf(auxNum / 1073741824) + " GB";
+//        }
+//        return numero;
+//    }
 }

@@ -153,20 +153,20 @@ public class FileManager extends AppCompatActivity {
                     //Exclusiu Atras
                     if (!finalRoot && finalI == 0) {//cliquem atras.
                         String cami = finalPathtemp;
-                        if(cami.equalsIgnoreCase(pathPare)){
+                        if (cami.equalsIgnoreCase(pathPare)) {
                             Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                             intent2.putExtra("path", cami);
-                            intent2.putExtra("root",pathPare);
+                            intent2.putExtra("root", pathPare);
                             startActivity(intent2);
 
-                        }else if (cami.charAt(cami.length() - 1) == '/') {//Si acaba amb una barra, la treu
+                        } else if (cami.charAt(cami.length() - 1) == '/') {//Si acaba amb una barra, la treu
                             cami = cami.substring(0, cami.length() - 1);
 
                             //Agafa tot el path fins la ultima barra, inclosa
                             cami = cami.substring(0, cami.lastIndexOf("/") + 1);
 
                             Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                            intent2.putExtra("root",pathPare);
+                            intent2.putExtra("root", pathPare);
                             intent2.putExtra("path", cami);
                             startActivity(intent2);
                         }
@@ -176,14 +176,14 @@ public class FileManager extends AppCompatActivity {
                     else if (children[finalI + aux].isDirectory()) {
                         Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
                         intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
-                        intent2.putExtra("root",pathPare);
+                        intent2.putExtra("root", pathPare);
                         startActivity(intent2);
                     } else {
                         //intent esplicit per cada arxiu.
                         //TODO: POSAR INTENTS IMPLICITS!!!
                         Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                         intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
-                        intent2.putExtra("root",pathPare);
+                        intent2.putExtra("root", pathPare);
                         startActivity(intent2);
                     }
                 }
@@ -346,23 +346,23 @@ public class FileManager extends AppCompatActivity {
             imatge.setImageResource(R.drawable.m4a);
         } else if (extencionFile.equalsIgnoreCase(("jar"))) {
 
-        imatge.setImageResource(R.drawable.jar);
-        }else if (extencionFile.equalsIgnoreCase(("jad"))) {
+            imatge.setImageResource(R.drawable.jar);
+        } else if (extencionFile.equalsIgnoreCase(("jad"))) {
 
             imatge.setImageResource(R.drawable.jad);
-        }else if (extencionFile.equalsIgnoreCase(("vcf"))) {
+        } else if (extencionFile.equalsIgnoreCase(("vcf"))) {
 
             imatge.setImageResource(R.drawable.vcf);
-        }else if (extencionFile.equalsIgnoreCase(("mp4"))) {
+        } else if (extencionFile.equalsIgnoreCase(("mp4"))) {
 
             imatge.setImageResource(R.drawable.mp4);
-        }else if (extencionFile.equalsIgnoreCase(("jpeg"))) {
+        } else if (extencionFile.equalsIgnoreCase(("jpeg"))) {
 
             imatge.setImageResource(R.drawable.jpeg);
-        }else if (extencionFile.equalsIgnoreCase(("opus"))) {
+        } else if (extencionFile.equalsIgnoreCase(("opus"))) {
 
             imatge.setImageResource(R.drawable.opus);
-        }else {
+        } else {
             imatge.setImageResource(R.drawable.unknown);
         }
     }
