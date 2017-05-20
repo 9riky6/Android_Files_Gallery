@@ -111,9 +111,9 @@ public class MainActivity extends AbsRuntimePermision
         final RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
         TextView TotalNumStorage = (TextView)findViewById(R.id.InternoNumTotal);
         TextView UsadoNumStorage = (TextView)findViewById(R.id.InternoNumUsado);
-        final String numero = TamanyTotalMemoria(rutaInterna);
-        TotalNumStorage.setText(numero);
-        UsadoNumStorage.setText(TamayUtilitzatMemoria(rutaInterna));
+      //  final String numero = TamanyTotalMemoria(rutaInterna);
+        //TotalNumStorage.setText(numero);
+       // UsadoNumStorage.setText(TamayUtilitzatMemoria(rutaInterna));
         phoneStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

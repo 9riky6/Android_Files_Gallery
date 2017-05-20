@@ -1,14 +1,19 @@
 package ricardo.android_files_gallery.Files;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -17,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +37,7 @@ public class FileManager extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.file_manager);
-       final String[] ElementEliminar = null;
+       final ArrayList<String> ElementEliminar = new ArrayList<String>(100);
         ImageButton bCrearCarpeta = (ImageButton)findViewById(R.id.imageButton_crear_carpeta);
         final ImageButton bBorrarCarpeta = (ImageButton)findViewById(R.id.imageButton_borrar_carpeta);
         ImageButton bCopiarCarpeta = (ImageButton)findViewById(R.id.imageButton_copiar_carpeta);
@@ -78,8 +84,7 @@ public class FileManager extends AppCompatActivity {
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
             size.setVisibility(View.GONE);
             type.setVisibility(View.GONE);
-//            size.setText("");
-//            type.setText("<3");
+
 
             //Afegim la informació a la taula
             tabla.addView(rowLayout);
@@ -202,13 +207,11 @@ public class FileManager extends AppCompatActivity {
             tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    int indice = 1;
-                    ElementEliminar[indice]= children[finalI-1].getAbsolutePath();
-                    Log.d("Indice ",String.valueOf(children[finalI-1].getAbsolutePath()));
+                    ElementEliminar.add(children[finalI-1].getAbsolutePath());
+                    Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(),Toast.LENGTH_LONG).show();
                     tabla.getChildAt(finalI).setBackgroundResource(R.drawable.selected_item);
                     selecteItemRemove.setVisibility(View.VISIBLE);
                     bBorrarCarpeta.setVisibility(View.VISIBLE);
-                    indice++;
                     return true;
                 }
             });
@@ -217,24 +220,40 @@ public class FileManager extends AppCompatActivity {
         bCrearCarpeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String NomCarpeta="Valor_de_proba";
-                Boolean b = false;
-                b= CrearCarpeta(NomCarpeta, finalPathtemp1);
-                if(b)Toast.makeText(FileManager.this,"La Carpeta se ha creado correctamente",Toast.LENGTH_LONG).show();
-                else Toast.makeText(FileManager.this,"La Carpeta no se ha creado correctamente",Toast.LENGTH_LONG).show();
-                TableRow row = (TableRow) findViewById(R.id.Item);
-                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                TableRow rowLayout = (TableRow) inflater.inflate(R.layout.item_list,row, false);
+                final String[] NomCarpeta = new String[1];
+                final Dialog dialog = new Dialog(FileManager.this);
+                dialog.setContentView(R.layout.input);
+                dialog.setTitle("Nombre Carpeta nueva:");
+
+                final EditText ed1 = (EditText)dialog.findViewById(R.id.editText1);
+                Button bt1 =(Button)dialog.findViewById(R.id.button1);
+                bt1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        NomCarpeta[0] = ed1.getText().toString();
+                        Boolean b = false;
+                        b= CrearCarpeta(NomCarpeta[0], finalPathtemp1);
+                        if(b){
+                            Toast.makeText(FileManager.this,"La Carpeta se ha creado correctamente",Toast.LENGTH_LONG).show();
+                            Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                            intent2.putExtra("path", finalPathtemp1);
+                            startActivity(intent2);
+                        }else{
+                            Toast.makeText(FileManager.this,"La Carpeta no se ha creado correctamente",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                dialog.show();
             }
         });
+
         bBorrarCarpeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Boolean bool= false;
-                //Toast.makeText(FileManager.this,ElementEliminar[0],Toast.LENGTH_LONG).show();
                 if(ElementEliminar!=null) {
-                    for (int i = 0; i < ElementEliminar.length; i++) {
-                        bool = Borrar(ElementEliminar[i]);
+                    for (int i = 0; i < ElementEliminar.size(); i++) {
+                        bool = Borrar(ElementEliminar.get(i));
                         Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
                         intent2.putExtra("path", finalPathtemp1);
                         startActivity(intent2);
@@ -249,6 +268,10 @@ public class FileManager extends AppCompatActivity {
         public void onClick(View view) {
             for (int i = 0;i<tabla.getChildCount();i++){
                 tabla.getChildAt(i).setBackgroundResource(R.drawable.transparent);
+                ElementEliminar.clear();
+                Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                intent2.putExtra("path", finalPathtemp1);
+                startActivity(intent2);
             }
         }
     });
@@ -471,18 +494,56 @@ public class FileManager extends AppCompatActivity {
     }
     private Boolean Borrar(String path) {
         File f = new File(path);
-        Boolean b= false;
+        Boolean b = false;
         if(f.isDirectory()){
             if(f.listFiles().length!=0){
+                Toast.makeText(FileManager.this,"La carpeta "+f.getName()+" te contingut",Toast.LENGTH_LONG).show();
+                //Falta preguntar al usuari.
+                //b=Alerta();
                 b= false;
-                Toast.makeText(FileManager.this,"La carpeta te contingut",Toast.LENGTH_LONG).show();
                 return b;
             }else{
                 b = f.delete();
-                Toast.makeText(FileManager.this,"sa borrat? "+b,Toast.LENGTH_LONG).show();
-                b= true;
+                Toast.makeText(FileManager.this,"Borrat ? "+ b,Toast.LENGTH_LONG).show();
+                b = true;
             }
         }
+        Log.d("R","Fin");
         return b;
     }
+//no funciona
+    private Boolean Alerta() {
+        final boolean [] b= {false};
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FileManager.this);
+                alertDialogBuilder.setTitle("");
+                alertDialogBuilder
+                        .setMessage("Vols borrar tot el contigut de la carpeta seleccionada ?")
+                        .setCancelable(false)
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Falta posar el metode per borraro tot
+                                Toast.makeText(FileManager.this,"Si",Toast.LENGTH_LONG).show();
+                                //b=true;
+                                b[0]=false;
+                                alertDialogBuilder.notifyAll();
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(FileManager.this,"NO",Toast.LENGTH_LONG).show();
+                                b[0]= false;
+                                alertDialogBuilder.notifyAll();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+        try {
+            alertDialog.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return b[0];
+        }
 }
