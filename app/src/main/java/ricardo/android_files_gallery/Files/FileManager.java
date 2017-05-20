@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import ricardo.android_files_gallery.MainActivity;
@@ -29,7 +31,11 @@ public class FileManager extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.file_manager);
-
+       final String[] ElementEliminar = null;
+        ImageButton bCrearCarpeta = (ImageButton)findViewById(R.id.imageButton_crear_carpeta);
+        final ImageButton bBorrarCarpeta = (ImageButton)findViewById(R.id.imageButton_borrar_carpeta);
+        ImageButton bCopiarCarpeta = (ImageButton)findViewById(R.id.imageButton_copiar_carpeta);
+        final ImageButton selecteItemRemove = (ImageButton)findViewById(R.id.remove);
         Intent intent = getIntent();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,11 +73,13 @@ public class FileManager extends AppCompatActivity {
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
             cami.setText(pathtemp);
 
-            //Modifiquem el size i el type
+//            //Modifiquem el size i el type
             TextView type = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
-            size.setText("");
-            type.setText("<3");
+            size.setVisibility(View.GONE);
+            type.setVisibility(View.GONE);
+//            size.setText("");
+//            type.setText("<3");
 
             //Afegim la informació a la taula
             tabla.addView(rowLayout);
@@ -113,19 +121,19 @@ public class FileManager extends AppCompatActivity {
                 long temp = children[i].length();
                 //PER MILLORAR
                 size.setText(getSizefile(temp));
-
                 //tipo
                 String temp2 = children[i].getName();
                 Log.d("nombre ", temp2);
                 if (temp2.contains(".")) {
-                    extension.setText("Fitxer " + temp2.substring(temp2.lastIndexOf(".") + 1));
+                    extension.setText("Extensio " + temp2.substring(temp2.lastIndexOf(".") + 1));
                     getImatge(temp2, imatge);
                 } else {
-                    extension.setText("Fitxer");
+                    extension.setText("Arxiu");
                 }
             } else { //directori / capeta
                 //PER MILLORAR
-                size.setText(getSize(children[i].getAbsolutePath()));
+
+                size.setText(getSize(children[i].getAbsolutePath()+"/"));
                 extension.setText("Directori");
             }
 
@@ -189,20 +197,61 @@ public class FileManager extends AppCompatActivity {
                 }
             });
         }
-        for (int i = 0; i < tabla.getChildCount(); i++) {
+        for (int i = 1; i <tabla.getChildCount(); i++) {
             final int finalI = i;
             tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Toast.makeText(FileManager.this, children[finalI - 1].getName(), Toast.LENGTH_LONG).show();
-                    // Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(), Toast.LENGTH_LONG).show();//falta la / al final
-                    //Posar drawable amb el color del selectet.
-                    tabla.getChildAt(finalI).setBackgroundResource(R.drawable.clicked_gray);
+                    int indice = 1;
+                    ElementEliminar[indice]= children[finalI-1].getAbsolutePath();
+                    Log.d("Indice ",String.valueOf(children[finalI-1].getAbsolutePath()));
+                    tabla.getChildAt(finalI).setBackgroundResource(R.drawable.selected_item);
+                    selecteItemRemove.setVisibility(View.VISIBLE);
+                    bBorrarCarpeta.setVisibility(View.VISIBLE);
+                    indice++;
                     return true;
                 }
             });
         }
-
+        final String finalPathtemp1 = pathtemp;
+        bCrearCarpeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String NomCarpeta="Valor_de_proba";
+                Boolean b = false;
+                b= CrearCarpeta(NomCarpeta, finalPathtemp1);
+                if(b)Toast.makeText(FileManager.this,"La Carpeta se ha creado correctamente",Toast.LENGTH_LONG).show();
+                else Toast.makeText(FileManager.this,"La Carpeta no se ha creado correctamente",Toast.LENGTH_LONG).show();
+                TableRow row = (TableRow) findViewById(R.id.Item);
+                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                TableRow rowLayout = (TableRow) inflater.inflate(R.layout.item_list,row, false);
+            }
+        });
+        bBorrarCarpeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean bool= false;
+                //Toast.makeText(FileManager.this,ElementEliminar[0],Toast.LENGTH_LONG).show();
+                if(ElementEliminar!=null) {
+                    for (int i = 0; i < ElementEliminar.length; i++) {
+                        bool = Borrar(ElementEliminar[i]);
+                        Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                        intent2.putExtra("path", finalPathtemp1);
+                        startActivity(intent2);
+                    }
+                }else{
+                        Toast.makeText(FileManager.this, "SELECCIONI UN ELEMENT", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    selecteItemRemove.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            for (int i = 0;i<tabla.getChildCount();i++){
+                tabla.getChildAt(i).setBackgroundResource(R.drawable.transparent);
+            }
+        }
+    });
     }
 
     private void getImatge(String name, ImageView imatge) {
@@ -366,30 +415,28 @@ public class FileManager extends AppCompatActivity {
             imatge.setImageResource(R.drawable.unknown);
         }
     }
-
     //PER MILLORAR mirar lo de les carpetes.
     public String getSize(String ruta) {//directori/carpeta
-        DecimalFormat df = new DecimalFormat("####");
+
+        DecimalFormat df = new DecimalFormat("####.###");
         File carpeta = new File(ruta);
         //ESPAI TOTAL
         String numero;//bytes
-        float auxNum = (float) carpeta.getTotalSpace() - carpeta.getFreeSpace();//numero temporal per pasar el valors i fer la combercio
-        float num2 = (float) carpeta.getTotalSpace() - carpeta.getFreeSpace();
-        if (num2 % 1024 != 0) {
+        float auxNum = carpeta.getTotalSpace() - carpeta.getFreeSpace();//numero temporal per pasar el valors i fer la combercio
+        if (auxNum % 1024 != 0) {
 
-            numero = String.valueOf(df.format(Math.ceil(auxNum / 1024))) + " KB Carpeta";
+            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1024))) + " KB";
 
-        } else if (num2 / 1048576 != 0) {
+        } else if (auxNum / 1048576 != 0 || auxNum/1048576 ==0) {
 
-            numero = String.valueOf(df.format(Math.ceil(auxNum / 1048576))) + " MB Carpeta";
+            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1048576))) + " MB ";
 
         } else {
 
-            numero = String.valueOf(df.format(Math.ceil(auxNum / 1073741824))) + " GB Carpeta";
+            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1073741824))) + " GB ";
         }
         return numero;
     }
-
     public String getSizefile(long num) {//arxius
         DecimalFormat df = new DecimalFormat("###0.#");
         float n = (float) num;
@@ -408,5 +455,34 @@ public class FileManager extends AppCompatActivity {
             valor = df.format(n / 1073741824) + " GB";
         }
         return valor;
+    }
+    private Boolean CrearCarpeta(String nombreCarpeta, String finalPathtemp) {
+        File file = null;
+        boolean bool= false;
+        try {
+            String rutaMesNom= finalPathtemp+nombreCarpeta;
+            file = new File(rutaMesNom);
+            bool=file.mkdir();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return bool;
+    }
+    private Boolean Borrar(String path) {
+        File f = new File(path);
+        Boolean b= false;
+        if(f.isDirectory()){
+            if(f.listFiles().length!=0){
+                b= false;
+                Toast.makeText(FileManager.this,"La carpeta te contingut",Toast.LENGTH_LONG).show();
+                return b;
+            }else{
+                b = f.delete();
+                Toast.makeText(FileManager.this,"sa borrat? "+b,Toast.LENGTH_LONG).show();
+                b= true;
+            }
+        }
+        return b;
     }
 }
