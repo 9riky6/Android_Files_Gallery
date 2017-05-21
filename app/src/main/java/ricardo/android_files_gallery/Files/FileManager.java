@@ -250,13 +250,53 @@ public class FileManager extends AppCompatActivity {
         bBorrarCarpeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean bool= false;
+               final Boolean[] bool = {false};
                 if(ElementEliminar!=null) {
                     for (int i = 0; i < ElementEliminar.size(); i++) {
-                        bool = Borrar(ElementEliminar.get(i));
-                        Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                        intent2.putExtra("path", finalPathtemp1);
-                        startActivity(intent2);
+                        //bool = Borrar(ElementEliminar.get(i));
+                        final File f = new File(ElementEliminar.get(i));
+                        //1r dialog de confirmacio:
+                        final Dialog dialog1 = new Dialog(FileManager.this);
+                        dialog1.setContentView(R.layout.confirmacio);
+                        dialog1.setTitle("¿borrar "+f.getName()+"?");
+                        Button btSi=(Button) dialog1.findViewById(R.id.buttonSiConfirmacio);
+                        final Button btNo = (Button)dialog1.findViewById(R.id.buttonCancelarConfirmacio);
+                        //butons del dialog:
+                        btSi.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(f.isDirectory()){
+                                    //2n dialog:
+                                    Log.d("Root","Es una carpeta");
+                                    if(f.listFiles().length!=0) {
+                                        Toast.makeText(FileManager.this,"La carpeta "+f.getName()+" te contingut",Toast.LENGTH_LONG).show();
+                                        //BorrarRecursivo(f);
+                                        //bool[0] = false;
+                                        Log.d("Root", "Borrat recursiu"+ bool[0]);
+                                    }
+                                }else{
+                                    Log.d("Root","Borro 1 fitxer o carpeta");
+                                    bool[0] =f.delete();
+                                    Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                                    intent2.putExtra("path", finalPathtemp1);
+                                    startActivity(intent2);
+                                    //b[0] = true;
+                                }
+                                Toast.makeText(FileManager.this,"¿Borrat? "+ bool[0],Toast.LENGTH_LONG).show();
+                                dialog1.dismiss();
+                            }
+                        });
+                        btNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                               // bool[0]=false;
+                                Log.d("Root","Cancelar 1");
+                                dialog1.dismiss();
+                            }
+                        });
+                        dialog1.show();
+                        Log.d("Root","No es pot borrar bool= "+ bool[0]);
+                        Toast.makeText(FileManager.this,"No se a borrado",Toast.LENGTH_LONG).show();
                     }
                 }else{
                         Toast.makeText(FileManager.this, "SELECCIONI UN ELEMENT", Toast.LENGTH_LONG).show();
@@ -276,7 +316,6 @@ public class FileManager extends AppCompatActivity {
         }
     });
     }
-
     private void getImatge(String name, ImageView imatge) {
         String extencionFile = name.substring(name.lastIndexOf(".") + 1);
         Log.d("Contenido extencionFile", extencionFile);
@@ -492,58 +531,15 @@ public class FileManager extends AppCompatActivity {
         }
         return bool;
     }
-    private Boolean Borrar(String path) {
-        File f = new File(path);
-        Boolean b = false;
-        if(f.isDirectory()){
-            if(f.listFiles().length!=0){
-                Toast.makeText(FileManager.this,"La carpeta "+f.getName()+" te contingut",Toast.LENGTH_LONG).show();
-                //Falta preguntar al usuari.
-                //b=Alerta();
-                b= false;
-                return b;
-            }else{
-                b = f.delete();
-                Toast.makeText(FileManager.this,"Borrat ? "+ b,Toast.LENGTH_LONG).show();
-                b = true;
-            }
-        }
-        Log.d("R","Fin");
-        return b;
-    }
-//no funciona
-    private Boolean Alerta() {
-        final boolean [] b= {false};
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FileManager.this);
-                alertDialogBuilder.setTitle("");
-                alertDialogBuilder
-                        .setMessage("Vols borrar tot el contigut de la carpeta seleccionada ?")
-                        .setCancelable(false)
-                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Falta posar el metode per borraro tot
-                                Toast.makeText(FileManager.this,"Si",Toast.LENGTH_LONG).show();
-                                //b=true;
-                                b[0]=false;
-                                alertDialogBuilder.notifyAll();
-                            }
-                        })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(FileManager.this,"NO",Toast.LENGTH_LONG).show();
-                                b[0]= false;
-                                alertDialogBuilder.notifyAll();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-        try {
-            alertDialog.wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return b[0];
-        }
+
+        //borrado recursivo del contenido de la carpeta padre
+//            private void BorrarRecursivo(File f){
+//                if (f.isDirectory()) {
+//                    for (File hijos : f.listFiles())
+//                        BorrarRecursivo(hijos);
+//                }else {
+//                    f.delete();
+//                }
+//                Log.d("Root","Entro al borrat");
+//            }
 }
