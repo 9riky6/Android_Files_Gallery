@@ -105,7 +105,6 @@ public class MainActivity extends AbsRuntimePermision
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -296,12 +295,63 @@ public class MainActivity extends AbsRuntimePermision
             } catch (SnappydbException e) {
                 e.printStackTrace();
             }
-            color = Constant.sky;
+            // /storage/emulated/0[1,2,...]
+            if (TextUtils.isEmpty(rawUserId)) {
+                rv.add(rawEmulatedStorageTarget);
+            } else {
+                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
+            }
         }
+        // Add all secondary storages
+        if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
+            // All Secondary SD-CARDs splited into array
+            final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
+            Collections.addAll(rv, rawSecondaryStorages);
+        }
+        return rv.toArray(new String[rv.size()]);
+    }
 
-        Methods.setColorTheme(this, color);
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-        setTheme(Constant.theme);
-        setContentView(R.layout.activity_main);
+    public String TamanyTotalMemoria(String ruta) {
+        DecimalFormat df = new DecimalFormat("###.##");
+        File arxiu = new File(ruta);
+        //ESPAI TOTAL
+        String numero = null;//bytes
+        float auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
+        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
+            numero = String.valueOf(auxNum) + " B";
 
-*/
+        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
+
+            numero = df.format(auxNum / 1024) + " KB";
+
+        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
+
+            numero = df.format(auxNum / 1048576) + " MB";
+
+        } else {
+
+            numero = df.format(auxNum / 1073741824) + " GB";
+        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
+
+            numero = df.format(auxNum / 1024) + " KB";
+
+        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
+
+            numero = df.format(auxNum / 1048576) + " MB";
+
+        } else {
+
+            numero = df.format(auxNum / 1073741824) + " GB";
+        }
+        return numero;
+    }
+}
