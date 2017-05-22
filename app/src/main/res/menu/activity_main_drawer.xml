@@ -37,8 +37,4 @@
         android:icon="@drawable/ic_face_black_24dp"
         android:title="Sobre nosotros" />
 
-    <item
-        android:id="@+id/blanco_switch"
-        android:title="Blanco/Negro"
-        app:actionLayout="@layout/action_view_switch" />
 </menu>

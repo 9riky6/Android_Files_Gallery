@@ -1,41 +1,31 @@
 package ricardo.android_files_gallery;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.snappydb.SnappydbException;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import ricardo.android_files_gallery.ColorChoser.ColorinesActivity;
-import ricardo.android_files_gallery.ColorChoser.Constant;
-import ricardo.android_files_gallery.ColorChoser.Methods;
-import ricardo.android_files_gallery.Database.DBAccess;
-import ricardo.android_files_gallery.Database.Database;
 import ricardo.android_files_gallery.Files.FileManager;
+import ricardo.android_files_gallery.Fragments.FileManagerFragment;
+import ricardo.android_files_gallery.Fragments.Gallery_Fragment;
+import ricardo.android_files_gallery.Fragments.Storage_Fragment;
 import ricardo.android_files_gallery.Permission.AbsRuntimePermision;
+import ricardo.android_files_gallery.Settings.Settings;
 
 /* convercion
 1 Kilobyte = 1,024 Bytes
@@ -44,20 +34,254 @@ import ricardo.android_files_gallery.Permission.AbsRuntimePermision;
 1 Terabyte = 1,099,511,627,776 Bytes
 */
 public class MainActivity extends AbsRuntimePermision
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
+        implements NavigationView.OnNavigationItemSelectedListener,
+        Storage_Fragment.OnFragmentInteractionListener,
+        Gallery_Fragment.OnFragmentInteractionListener,
+        FileManagerFragment.OnFragmentInteractionListener {
+
+
     private static final int REQUEST_PERMISSION = 10;
     private boolean load = true;
-    TextView InternalStorage, ExternalStorage;
-    public static String rutaInterna = null;
-    public static String[] rutaExterna = null;
     private boolean Permisions = false;
+    private Storage_Fragment test;
+    private SharedPreferences sharedPreferences;
+    private int theme;
+    private Intent intent;
+    private android.graphics.Bitmap icono;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        isStoragePermissionGranted();
+        // Select theme saved by user
+        theme();
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (savedInstanceState == null) {
+            Fragment fragment = null;
+            Class fragmentClass = null;
+            fragmentClass = Storage_Fragment.class;
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        if (Build.VERSION.SDK_INT > 23) {
+            requestAppPermissions(new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    R.string.msg,
+                    REQUEST_PERMISSION);
+        }
+
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Fragment fragment = null;
+        Class fragmentClass = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        test = (Storage_Fragment) getSupportFragmentManager().findFragmentByTag("testID");
+        if (id == R.id.nav_home) {
+            if (test != null && test.isVisible()) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Toast.makeText(this, "NO peta", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        } else if (id == R.id.phone_storage) {
+            intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", Storage_Fragment.rutaInterna + "/"); //rutaInterna
+            startActivity(intent);
+        } else if (id == R.id.sd_storage) {
+            intent = new Intent(getApplicationContext(), FileManager.class);
+            intent.putExtra("path", Storage_Fragment.rutaExterna[0] + "/"); //rutaInterna
+            startActivity(intent);
+        } else if (id == R.id.nav_galeria) {
+            fragmentClass = Gallery_Fragment.class;
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        } else if (id == R.id.nav_apariencia) {
+            intent = new Intent(MainActivity.this, Settings.class);
+            startActivity(intent);
+        } else if (id == R.id.about_us) {
+            Toast.makeText(getApplicationContext(), "aqui tiene que ir un pop-up explicando quienes somos y eso", Toast.LENGTH_LONG).show();
+//            fragmentClass = FragmentTwo.class;
+        }
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void theme() {
+        sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
+        theme = sharedPreferences.getInt("THEME", 0);
+        settingTheme(theme);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void settingTheme(int theme) {
+        switch (theme) {
+            case 1:
+                setTheme(R.style.AppTheme);
+                break;
+            case 2:
+                setTheme(R.style.AppTheme_maraschino);
+                break;
+            case 3:
+                setTheme(R.style.AppTheme_cayenne);
+                break;
+            case 4:
+                setTheme(R.style.AppTheme_marron);
+                break;
+            case 5:
+                setTheme(R.style.AppTheme_plum);
+                break;
+            case 6:
+                setTheme(R.style.AppTheme_eggplant);
+                break;
+            case 7:
+                setTheme(R.style.AppTheme_grape);
+                break;
+            case 8:
+                setTheme(R.style.AppTheme_orchid);
+                break;
+            case 9:
+                setTheme(R.style.AppTheme_lavender);
+                break;
+            case 10:
+                setTheme(R.style.AppTheme_carnation);
+                break;
+            case 11:
+                setTheme(R.style.AppTheme_strawberry);
+                break;
+            case 12:
+                setTheme(R.style.AppTheme_bubblegum);
+                break;
+            case 13:
+                setTheme(R.style.AppTheme_magenta);
+                break;
+            case 14:
+                setTheme(R.style.AppTheme_salmon);
+                break;
+            case 15:
+                setTheme(R.style.AppTheme_tangerine);
+                break;
+            case 16:
+                setTheme(R.style.AppTheme_cantaloupe);
+                break;
+            case 17:
+                setTheme(R.style.AppTheme_banana);
+                break;
+            case 18:
+                setTheme(R.style.AppTheme_lemon);
+                break;
+            case 19:
+                setTheme(R.style.AppTheme_honeydew);
+                break;
+            case 20:
+                setTheme(R.style.AppTheme_lime);
+                break;
+            case 21:
+                setTheme(R.style.AppTheme_spring);
+                break;
+            case 22:
+                setTheme(R.style.AppTheme_clover);
+                break;
+            case 23:
+                setTheme(R.style.AppTheme_fern);
+                break;
+            case 24:
+                setTheme(R.style.AppTheme_moss);
+                break;
+            case 25:
+                setTheme(R.style.AppTheme_flora);
+                break;
+            case 26:
+                setTheme(R.style.AppTheme_seafoam);
+                break;
+            case 27:
+                setTheme(R.style.AppTheme_spindrift);
+                break;
+            case 28:
+                setTheme(R.style.AppTheme_teal);
+                break;
+            case 29:
+                setTheme(R.style.AppTheme_sky);
+                break;
+            case 30:
+                setTheme(R.style.AppTheme_tuquoise);
+                break;
+            default:
+                setTheme(R.style.AppTheme);
+                break;
+        }
+    }
+}
+/*
         Database database = new Database(this);
         Integer color = null;
         try {
@@ -79,252 +303,5 @@ public class MainActivity extends AbsRuntimePermision
 
         setTheme(Constant.theme);
         setContentView(R.layout.activity_main);
-        requestAppPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},R.string.msg,REQUEST_PERMISSION);
 
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        rutaInterna = RutaInterna();
-        rutaExterna = RutaExterna();
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.Floatingbutton1);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        final RelativeLayout phoneStorage = (RelativeLayout) findViewById(R.id.phone_storage);
-        final String numero = TamanyTotalMemoria(rutaInterna);
-
-        phoneStorage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, numero, Toast.LENGTH_LONG).show();
-                //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
-                //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
-                //File manager <3
-                Intent intent = new Intent(getApplicationContext(), FileManager.class);
-                intent.putExtra("path", rutaInterna + "/"); //rutaInterna
-                intent.putExtra("root", rutaInterna + "/");
-                startActivity(intent);
-            }
-        });
-        RelativeLayout sdStorage = (RelativeLayout) findViewById(R.id.sd_storage);
-        final File StadoMemoria = new File(rutaExterna[0]);
-        final String numero1 = TamanyTotalMemoria(rutaExterna[0]);
-
-
-        // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
-        if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
-            sdStorage.setVisibility(View.GONE);
-        } else {
-            sdStorage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, numero1, Toast.LENGTH_LONG).show();
-                    // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
-                    // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
-
-                    //File manager SD External
-                    Intent intent = new Intent(getApplicationContext(), FileManager.class);
-                    intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
-                    intent.putExtra("root", rutaExterna[0] + "/");
-                    startActivity(intent);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode) {
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v("TAG", "Permission: " + permissions[0] + "was " + grantResults[0]);
-            //resume tasks needing this permission
-        }
-    }
-
-    public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v("Permision granted", "okey");
-                return true;
-            } else {
-
-                Log.v("Permision revoked", "fuck");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v("Permision is granted", "YES");
-            return true;
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.phone_storage) {
-            Intent intent = new Intent(getApplicationContext(), FileManager.class);
-            intent.putExtra("path", rutaInterna + "/"); //rutaInterna
-            startActivity(intent);
-        } else if (id == R.id.sd_storage) {
-            Intent intent = new Intent(getApplicationContext(), FileManager.class);
-            intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
-            startActivity(intent);
-        } else if (id == R.id.nav_galeria) {
-            Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-            intent.putExtra("path", rutaExterna[0] + "/"); //rutaInterna
-            startActivity(intent);
-        } else if (id == R.id.nav_apariencia) {
-            Intent searchIntent = new Intent(MainActivity.this, ColorinesActivity.class);
-            startActivity(searchIntent);
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        } else if (id == R.id.about_us) {
-            Toast.makeText(this, "Ricardo THE BEST", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.blanco_switch) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private String RutaInterna() {
-        String ruta = null;
-        InternalStorage = (TextView) findViewById(R.id.textTituloInter);
-        // ExternalStorage = (TextView) findViewById(R.id.textTituloExt);
-
-        String IntStorage;
-
-        IntStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
-        ruta = IntStorage;
-        if (IntStorage.contains("sdcard")) {
-            InternalStorage.setText("Phone Storage <3");
-        }
-
-        return ruta;
-    }
-
-    private String[] RutaExterna() {
-        // Final set of paths
-        final Set<String> rv = new HashSet<String>();
-        // Primary physical SD-CARD (not emulated)
-        final String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
-        // All Secondary SD-CARDs (all exclude primary) separated by ":"
-        final String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
-        // Primary emulated SD-CARD
-        final String rawEmulatedStorageTarget = System.getenv("EMULATED_STORAGE_TARGET");
-        if (TextUtils.isEmpty(rawEmulatedStorageTarget)) {
-            // Device has physical external storage; use plain paths.
-            if (TextUtils.isEmpty(rawExternalStorage)) {
-                // EXTERNAL_STORAGE undefined; falling back to default.
-                rv.add("/storage/sdcard0");
-            } else {
-                rv.add(rawExternalStorage);
-            }
-        } else {
-            // Device has emulated storage; external storage paths should have
-            // userId burned into them.
-            final String rawUserId;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                rawUserId = "";
-            } else {
-                final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                final String[] folders = DIR_SEPORATOR.split(path);
-                final String lastFolder = folders[folders.length - 1];
-                boolean isDigit = false;
-                try {
-                    Integer.valueOf(lastFolder);
-                    isDigit = true;
-                } catch (NumberFormatException ignored) {
-                }
-                rawUserId = isDigit ? lastFolder : "";
-            }
-            // /storage/emulated/0[1,2,...]
-            if (TextUtils.isEmpty(rawUserId)) {
-                rv.add(rawEmulatedStorageTarget);
-            } else {
-                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
-            }
-        }
-        // Add all secondary storages
-        if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
-            // All Secondary SD-CARDs splited into array
-            final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
-            Collections.addAll(rv, rawSecondaryStorages);
-        }
-        return rv.toArray(new String[rv.size()]);
-    }
-
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    public String TamanyTotalMemoria(String ruta) {
-        File arxiu = new File(ruta);
-        //ESPAI TOTAL
-        String numero = null;//bytes
-        long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
-        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
-            numero = String.valueOf(auxNum) + " B";
-
-        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
-
-            numero = String.valueOf(auxNum / 1024) + " KB";
-
-        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
-
-            numero = String.valueOf(auxNum / 1048576) + " MB";
-
-        } else {
-
-            numero = String.valueOf(auxNum / 1073741824) + " GB";
-        }
-        return numero;
-    }
-}
+*/

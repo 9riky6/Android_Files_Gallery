@@ -12,7 +12,7 @@
         android:resizeableActivity="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -27,21 +27,18 @@
             android:label="Loading"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ColorChoser.ColorinesActivity"
-            android:label="Apariencia"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Files.FileManager"
             android:label="managerFile"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".GalleryActivity"
-            android:label="@string/title_activity_gallery"
-            android:theme="@style/AppTheme"></activity>
+            android:name=".Settings.Settings"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ricardo.android_files_gallery.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

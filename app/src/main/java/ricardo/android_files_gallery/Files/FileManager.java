@@ -3,6 +3,7 @@ package ricardo.android_files_gallery.Files;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,16 +26,22 @@ import ricardo.android_files_gallery.R;
 
 public class FileManager extends AppCompatActivity {
 
+    private SharedPreferences sharedPreferences;
+    private int theme;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Select theme saved by user
+        theme();
         setContentView(R.layout.file_manager);
 
         Intent intent = getIntent();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Aixo fa que sempre deixi la ultima barra
@@ -153,20 +160,20 @@ public class FileManager extends AppCompatActivity {
                     //Exclusiu Atras
                     if (!finalRoot && finalI == 0) {//cliquem atras.
                         String cami = finalPathtemp;
-                        if(cami.equalsIgnoreCase(pathPare)){
+                        if (cami.equalsIgnoreCase(pathPare)) {
                             Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                             intent2.putExtra("path", cami);
-                            intent2.putExtra("root",pathPare);
+                            intent2.putExtra("root", pathPare);
                             startActivity(intent2);
 
-                        }else if (cami.charAt(cami.length() - 1) == '/') {//Si acaba amb una barra, la treu
+                        } else if (cami.charAt(cami.length() - 1) == '/') {//Si acaba amb una barra, la treu
                             cami = cami.substring(0, cami.length() - 1);
 
                             //Agafa tot el path fins la ultima barra, inclosa
                             cami = cami.substring(0, cami.lastIndexOf("/") + 1);
 
                             Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                            intent2.putExtra("root",pathPare);
+                            intent2.putExtra("root", pathPare);
                             intent2.putExtra("path", cami);
                             startActivity(intent2);
                         }
@@ -176,14 +183,14 @@ public class FileManager extends AppCompatActivity {
                     else if (children[finalI + aux].isDirectory()) {
                         Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
                         intent2.putExtra("path", children[finalI + aux].getAbsolutePath() + "/");
-                        intent2.putExtra("root",pathPare);
+                        intent2.putExtra("root", pathPare);
                         startActivity(intent2);
                     } else {
                         //intent esplicit per cada arxiu.
                         //TODO: POSAR INTENTS IMPLICITS!!!
                         Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
                         intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
-                        intent2.putExtra("root",pathPare);
+                        intent2.putExtra("root", pathPare);
                         startActivity(intent2);
                     }
                 }
@@ -203,6 +210,110 @@ public class FileManager extends AppCompatActivity {
             });
         }
 
+    }
+
+    public void theme() {
+        sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
+        theme = sharedPreferences.getInt("THEME", 0);
+        settingTheme(theme);
+    }
+
+    public void settingTheme(int theme) {
+        switch (theme) {
+            case 1:
+                setTheme(R.style.AppTheme);
+                break;
+            case 2:
+                setTheme(R.style.AppTheme_maraschino);
+                break;
+            case 3:
+                setTheme(R.style.AppTheme_cayenne);
+                break;
+            case 4:
+                setTheme(R.style.AppTheme_marron);
+                break;
+            case 5:
+                setTheme(R.style.AppTheme_plum);
+                break;
+            case 6:
+                setTheme(R.style.AppTheme_eggplant);
+                break;
+            case 7:
+                setTheme(R.style.AppTheme_grape);
+                break;
+            case 8:
+                setTheme(R.style.AppTheme_orchid);
+                break;
+            case 9:
+                setTheme(R.style.AppTheme_lavender);
+                break;
+            case 10:
+                setTheme(R.style.AppTheme_carnation);
+                break;
+            case 11:
+                setTheme(R.style.AppTheme_strawberry);
+                break;
+            case 12:
+                setTheme(R.style.AppTheme_bubblegum);
+                break;
+            case 13:
+                setTheme(R.style.AppTheme_magenta);
+                break;
+            case 14:
+                setTheme(R.style.AppTheme_salmon);
+                break;
+            case 15:
+                setTheme(R.style.AppTheme_tangerine);
+                break;
+            case 16:
+                setTheme(R.style.AppTheme_cantaloupe);
+                break;
+            case 17:
+                setTheme(R.style.AppTheme_banana);
+                break;
+            case 18:
+                setTheme(R.style.AppTheme_lemon);
+                break;
+            case 19:
+                setTheme(R.style.AppTheme_honeydew);
+                break;
+            case 20:
+                setTheme(R.style.AppTheme_lime);
+                break;
+            case 21:
+                setTheme(R.style.AppTheme_spring);
+                break;
+            case 22:
+                setTheme(R.style.AppTheme_clover);
+                break;
+            case 23:
+                setTheme(R.style.AppTheme_fern);
+                break;
+            case 24:
+                setTheme(R.style.AppTheme_moss);
+                break;
+            case 25:
+                setTheme(R.style.AppTheme_flora);
+                break;
+            case 26:
+                setTheme(R.style.AppTheme_seafoam);
+                break;
+            case 27:
+                setTheme(R.style.AppTheme_spindrift);
+                break;
+            case 28:
+                setTheme(R.style.AppTheme_teal);
+                break;
+            case 29:
+                setTheme(R.style.AppTheme_sky);
+                break;
+            case 30:
+                setTheme(R.style.AppTheme_tuquoise);
+                break;
+            default:
+                setTheme(R.style.AppTheme);
+                break;
+        }
     }
 
     private void getImatge(String name, ImageView imatge) {
@@ -346,23 +457,23 @@ public class FileManager extends AppCompatActivity {
             imatge.setImageResource(R.drawable.m4a);
         } else if (extencionFile.equalsIgnoreCase(("jar"))) {
 
-        imatge.setImageResource(R.drawable.jar);
-        }else if (extencionFile.equalsIgnoreCase(("jad"))) {
+            imatge.setImageResource(R.drawable.jar);
+        } else if (extencionFile.equalsIgnoreCase(("jad"))) {
 
             imatge.setImageResource(R.drawable.jad);
-        }else if (extencionFile.equalsIgnoreCase(("vcf"))) {
+        } else if (extencionFile.equalsIgnoreCase(("vcf"))) {
 
             imatge.setImageResource(R.drawable.vcf);
-        }else if (extencionFile.equalsIgnoreCase(("mp4"))) {
+        } else if (extencionFile.equalsIgnoreCase(("mp4"))) {
 
             imatge.setImageResource(R.drawable.mp4);
-        }else if (extencionFile.equalsIgnoreCase(("jpeg"))) {
+        } else if (extencionFile.equalsIgnoreCase(("jpeg"))) {
 
             imatge.setImageResource(R.drawable.jpeg);
-        }else if (extencionFile.equalsIgnoreCase(("opus"))) {
+        } else if (extencionFile.equalsIgnoreCase(("opus"))) {
 
             imatge.setImageResource(R.drawable.opus);
-        }else {
+        } else {
             imatge.setImageResource(R.drawable.unknown);
         }
     }
