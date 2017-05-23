@@ -14,6 +14,7 @@
     <!--Color choser-->
     <drawable name="transparent">#00000000</drawable>
     <drawable name="clicked_gray">#80e0e0e0</drawable>
+    <drawable name="Selected_item">#959494</drawable>
     <color name="md_text_white">#ffffffff</color>
     <color name="md_divider">#1f000000</color>
     <color name="md_text">#df000000</color>
