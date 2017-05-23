@@ -133,8 +133,7 @@ public class MainActivity extends AbsRuntimePermision
             intent.putExtra("path", Storage_Fragment.rutaExterna[0] + "/"); //rutaInterna
             startActivity(intent);
         } else if (id == R.id.nav_galeria) {
-            fragmentClass = Gallery_Fragment.class;
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Gallery_Fragment()).commit();
         } else if (id == R.id.nav_apariencia) {
             intent = new Intent(MainActivity.this, Settings.class);
             startActivity(intent);
