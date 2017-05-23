@@ -2,6 +2,7 @@ package ricardo.android_files_gallery;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -51,6 +54,8 @@ public class MainActivity extends AbsRuntimePermision
     private int theme;
     private Intent intent;
     private android.graphics.Bitmap icono;
+    private Dialog dialog;
+    private Button bt1Dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +143,7 @@ public class MainActivity extends AbsRuntimePermision
             intent = new Intent(MainActivity.this, Settings.class);
             startActivity(intent);
         } else if (id == R.id.about_us) {
-            Toast.makeText(getApplicationContext(), "aqui tiene que ir un pop-up explicando quienes somos y eso", Toast.LENGTH_LONG).show();
+            About_us();
 //            fragmentClass = FragmentTwo.class;
         }
         try {
@@ -152,6 +157,19 @@ public class MainActivity extends AbsRuntimePermision
         return true;
     }
 
+    private void About_us() {
+        dialog = new Dialog(MainActivity.this, R.style.Title);
+        dialog.setContentView(R.layout.about_us);
+        dialog.setTitle("Android Files Manager");
+        bt1Dialog = (Button)dialog.findViewById(R.id.buttonCerrar_about);
+        bt1Dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     public void theme() {
         sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
         theme = sharedPreferences.getInt("THEME", 0);
@@ -162,7 +180,6 @@ public class MainActivity extends AbsRuntimePermision
     public void onFragmentInteraction(Uri uri) {
 
     }
-
     public void settingTheme(int theme) {
         switch (theme) {
             case 1:
@@ -260,8 +277,7 @@ public class MainActivity extends AbsRuntimePermision
                 break;
         }
     }
-
-    }
+}
 /*
         Database database = new Database(this);
         Integer color = null;

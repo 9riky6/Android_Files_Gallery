@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Archivos</string>
-
+    <string name="About_Us">
+        Creadores : Ricardo Romani Aguado y Nil Llibert Garcia y Delshorts.
+    </string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

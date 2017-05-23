@@ -370,4 +370,15 @@
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Title" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/text_center</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="text_center">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>
