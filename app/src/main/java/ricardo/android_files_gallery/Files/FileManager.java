@@ -152,10 +152,10 @@ public class FileManager extends AppCompatActivity {
                 } else {
                     extension.setText("Arxiu");
                 }
-            } else { //directori / capeta
+            } else { //Carpeta
                 //PER MILLORAR
-
-                size.setText(getSize(children[i].getAbsolutePath()+"/"));
+                String temp1 = children[i].getAbsolutePath();
+                size.setText(getSize(temp1));
                 extension.setText("Directori");
             }
 
@@ -315,13 +315,11 @@ public class FileManager extends AppCompatActivity {
             }
         });
     }
-
     public void theme() {
         sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
         theme = sharedPreferences.getInt("THEME", 0);
         settingTheme(theme);
     }
-
     public void settingTheme(int theme) {
         switch (theme) {
             case 1:
@@ -419,7 +417,6 @@ public class FileManager extends AppCompatActivity {
                 break;
         }
     }
-
     private void getImatge(String name, ImageView imatge) {
         String extencionFile = name.substring(name.lastIndexOf(".") + 1);
         Log.d("Contenido extencionFile", extencionFile);
@@ -583,28 +580,44 @@ public class FileManager extends AppCompatActivity {
     }
     //PER MILLORAR mirar lo de les carpetes.
     public String getSize(String ruta) {//directori/carpeta
-
+        File f = new File(ruta);
         DecimalFormat df = new DecimalFormat("####.###");
-        File carpeta = new File(ruta);
-        //ESPAI TOTAL
-        String numero;//bytes
-        float auxNum = carpeta.getTotalSpace() - carpeta.getFreeSpace();//numero temporal per pasar el valors i fer la combercio
-        if (auxNum % 1024 != 0) {
+        String Sumatotal = null;//bytes
+        File[] files=null;
+        float suma = 0;
+        Log.d("Root","Entro");
+        if(f.isDirectory()){
+            files = f.listFiles();
+            if(files.length!=0) {
 
-            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1024))) + " KB";
+                for (int i = 0; i < files.length; i++) {
+                    float auxNum = files[i].length();
+                    suma = suma + auxNum;
+                }
+                int aux= (int) suma;
 
-        } else if (auxNum / 1048576 != 0 || auxNum/1048576 ==0) {
-
-            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1048576))) + " MB ";
-
-        } else {
-
-            numero = String.valueOf(df.format(/*Math.ceil*/(auxNum / 1073741824))) + " GB ";
+                if (aux <=1024) {
+                    Sumatotal = df.format(suma) + " B";
+                } else if (aux >1024 && aux <=1048576 ) {
+                    Sumatotal = df.format(suma / 1024) + " KB";
+                } else if (aux > 1048576  && aux <= 1073741824) {
+                    Sumatotal = df.format(suma / 1048576) + " MB ";
+                } else if (aux > 1073741824) {
+                    Sumatotal = df.format(suma / 1073741824) + " GB ";
+                } else if (aux == 0) {
+                    Sumatotal = "Vacio";
+                }
+                Log.d("Root", String.valueOf(aux));
+            }else{
+                Sumatotal ="Vacio";
+            }
+        }else{
+            Sumatotal="Vacio";
         }
-        return numero;
+        return Sumatotal;
     }
     public String getSizefile(long num) {//arxius
-        DecimalFormat df = new DecimalFormat("###0.#");
+        DecimalFormat df = new DecimalFormat("###0.##");
         float n = (float) num;
         String valor;
         if (num % 1024 != 0 && num / 1024 == 0) {

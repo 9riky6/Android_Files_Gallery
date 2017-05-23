@@ -149,7 +149,7 @@ public class Storage_Fragment extends Fragment {
         ExOcupated.setText(numero2);
         StadoMemoria = new File(rutaExterna[0]);
         numero = String.valueOf(StadoMemoria.getTotalSpace());
-        if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
+        if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed") || rutaExterna[0].equals(rutaInterna)) {
             sdStorage.setVisibility(View.GONE);
         } else {
             sdStorage.setOnClickListener(new View.OnClickListener() {
@@ -269,11 +269,11 @@ public class Storage_Fragment extends Fragment {
         //ESPAI TOTAL
         String numero = null;//bytes
         float auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
-        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
+        if (arxiu.getTotalSpace() <=1024) { //kilobyte
             numero = df.format(auxNum) + " B";
-        } else if (arxiu.getTotalSpace() % 1024 != 0 && arxiu.getTotalSpace() / 1048576 == 0) {
+        } else if (arxiu.getTotalSpace() >1024  && arxiu.getTotalSpace() <= 1048576) {
             numero = df.format(auxNum / 1024) + " KB";
-        } else if (arxiu.getTotalSpace() % 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
+        } else if (arxiu.getTotalSpace() > 1048576  && arxiu.getTotalSpace() <= 1073741824 ) {
             numero = df.format(auxNum / 1048576) + " MB";
         } else {
             numero = df.format(auxNum / 1073741824) + " GB";
@@ -285,14 +285,14 @@ public class Storage_Fragment extends Fragment {
         DecimalFormat df = new DecimalFormat("###.##");
         File arxiu = new File(ruta);
         float num = arxiu.getTotalSpace()-arxiu.getFreeSpace();
-        if (num%1024 !=0 && num/1024 ==0.0) {
-            numero1= df.format(num)+" B";
-        } else if ( num%1024!=0 && num / 1048576 == 0.0) {
+        if (num <=1024) {
+            numero1 = df.format(num) + " B";
+        } else if (num >1024 && num <=1048576 ) {
             numero1 = df.format(num / 1024) + " KB";
-        } else if (num % 1048576 != 0 && num / 1073741824 ==(0.0)) {
-            numero1 = df.format(num / 1048576) + " MB";
-        } else if (num/1073741824!=0){
-            numero1 = df.format(num / 1073741824) + " GB";
+        } else if (num > 1048576  && num <= 1073741824) {
+            numero1 = df.format(num / 1048576) + " MB ";
+        } else if (num > 1073741824) {
+            numero1 = df.format(num / 1073741824) + " GB ";
         }
         return numero1;
     }
