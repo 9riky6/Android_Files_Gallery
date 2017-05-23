@@ -15,11 +15,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,7 +53,7 @@ public class Storage_Fragment extends Fragment {
     public static String rutaInterna = null;
     public static String[] rutaExterna = null;
 
-    TextView InternalStorage, ExternalStorage;
+    TextView InternalStorage, ExternalStorage,IntTotal,IntOcupated,ExTotal,ExOcupated;
     private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
 
     private RelativeLayout phoneStorage;
@@ -62,6 +64,7 @@ public class Storage_Fragment extends Fragment {
     private File StadoMemoria;
     private String numero1;
     private FragmentManager fm;
+    private String numero2;
 
     public Storage_Fragment() {
         // Required empty public constructor
@@ -105,13 +108,20 @@ public class Storage_Fragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         InternalStorage = (TextView) getActivity().findViewById(R.id.textTituloInter);
+        IntTotal = (TextView)getActivity().findViewById(R.id.InternoNumTotal);
+        IntOcupated=(TextView)getActivity().findViewById(R.id.InternoNumUsado);
+        ExTotal=(TextView)getActivity().findViewById(R.id.espacioSD_Total);
+        ExOcupated= (TextView)getActivity().findViewById(R.id.espacioSD_Usado);
 
         rutaInterna = RutaInterna();
         rutaExterna = RutaExterna();
         fm = getChildFragmentManager();
 
         phoneStorage = (RelativeLayout) getActivity().findViewById(R.id.phone_storage);
-        final String numero = TamanyTotalMemoria(rutaInterna);
+        numero1 = TamanyTotalMemoria(rutaInterna);
+        numero2 =TamanyOcupatMemoria(rutaInterna);
+        IntTotal.setText(numero1);
+        IntOcupated.setText(numero2);
 
         if (Build.VERSION.SDK_INT > 23) {
             hasPermission = getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -133,10 +143,12 @@ public class Storage_Fragment extends Fragment {
         });
 
         sdStorage = (RelativeLayout) getActivity().findViewById(R.id.sd_storage);
-        StadoMemoria = new File(rutaExterna[0]);
         numero1 = TamanyTotalMemoria(rutaExterna[0]);
-
-        // final String numero = String.valueOf(StadoMemoria.getTotalSpace());
+        numero2= TamanyOcupatMemoria(rutaExterna[0]);
+        ExTotal.setText(numero1);
+        ExOcupated.setText(numero2);
+        StadoMemoria = new File(rutaExterna[0]);
+        numero = String.valueOf(StadoMemoria.getTotalSpace());
         if (Environment.getExternalStorageState(StadoMemoria).equalsIgnoreCase("removed")) {
             sdStorage.setVisibility(View.GONE);
         } else {
@@ -156,15 +168,12 @@ public class Storage_Fragment extends Fragment {
             });
         }
     }
-
     // TODO: Rename method, update argument and hook method into UI event
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -175,13 +184,11 @@ public class Storage_Fragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -196,16 +203,16 @@ public class Storage_Fragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
     private String RutaInterna() {
         String ruta = null;
         ruta = Environment.getExternalStorageDirectory().getAbsolutePath();
-        if (ruta.contains("sdcard")) {
-            InternalStorage.setText(ruta);
+        if (ruta.contains("emulated")) {
+            InternalStorage.setText("Memoria Interna");
+        }if(ruta.contains("sdcard")){
+            InternalStorage.setText("Memoria interna emulador");
         }
         return ruta;
     }
-
     private String[] RutaExterna() {
         // Final set of paths
         final Set<String> rv = new HashSet<String>();
@@ -256,27 +263,42 @@ public class Storage_Fragment extends Fragment {
         }
         return rv.toArray(new String[rv.size()]);
     }
-
     public String TamanyTotalMemoria(String ruta) {
+        DecimalFormat df = new DecimalFormat("###.##");
         File arxiu = new File(ruta);
         //ESPAI TOTAL
         String numero = null;//bytes
-        long auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
+        float auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
         if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
-            numero = String.valueOf(auxNum) + " B";
-        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
-            numero = String.valueOf(auxNum / 1024) + " KB";
-        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
-            numero = String.valueOf(auxNum / 1048576) + " MB";
+            numero = df.format(auxNum) + " B";
+        } else if (arxiu.getTotalSpace() % 1024 != 0 && arxiu.getTotalSpace() / 1048576 == 0) {
+            numero = df.format(auxNum / 1024) + " KB";
+        } else if (arxiu.getTotalSpace() % 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
+            numero = df.format(auxNum / 1048576) + " MB";
         } else {
-            numero = String.valueOf(auxNum / 1073741824) + " GB";
+            numero = df.format(auxNum / 1073741824) + " GB";
         }
         return numero;
     }
-
+    public String TamanyOcupatMemoria(String ruta) {
+        String numero1= "npi";
+        DecimalFormat df = new DecimalFormat("###.##");
+        File arxiu = new File(ruta);
+        float num = arxiu.getTotalSpace()-arxiu.getFreeSpace();
+        if (num%1024 !=0 && num/1024 ==0.0) {
+            numero1= df.format(num)+" B";
+        } else if ( num%1024!=0 && num / 1048576 == 0.0) {
+            numero1 = df.format(num / 1024) + " KB";
+        } else if (num % 1048576 != 0 && num / 1073741824 ==(0.0)) {
+            numero1 = df.format(num / 1048576) + " MB";
+        } else if (num/1073741824!=0){
+            numero1 = df.format(num / 1073741824) + " GB";
+        }
+        return numero1;
+    }
     private void showPhoneStorage() {
-        Toast.makeText(getContext(), numero, Toast.LENGTH_LONG).show();
-        //Toast.makeText(MainActivity.this,rutaInterna+"/", Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext(), numero, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),rutaInterna+"/", Toast.LENGTH_LONG).show();
         //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
         //File manager <3
 
@@ -285,10 +307,9 @@ public class Storage_Fragment extends Fragment {
         intent.putExtra("root", rutaInterna + "/");
         startActivity(intent);
     }
-
     private void showSdStorage() {
-        Toast.makeText(getContext(), numero1, Toast.LENGTH_LONG).show();
-        // Toast.makeText(MainActivity.this, rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), numero1, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), rutaExterna[0] + "/", Toast.LENGTH_LONG).show();
         // Toast.makeText(MainActivity.this,Environment.getExternalStorageState(StadoMemoria).toString(), Toast.LENGTH_LONG).show();
 
         //File manager SD External

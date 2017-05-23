@@ -245,8 +245,10 @@ public class FileManager extends AppCompatActivity {
                             Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
                             intent2.putExtra("path", finalPathtemp1);
                             startActivity(intent2);
+                            dialog.dismiss();
                         }else{
                             Toast.makeText(FileManager.this,"La Carpeta no se ha creado correctamente",Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
                         }
                     }
                 });
@@ -260,50 +262,22 @@ public class FileManager extends AppCompatActivity {
                 final Boolean[] bool = {false};
                 if(ElementEliminar!=null) {
                     for (int i = 0; i < ElementEliminar.size(); i++) {
-                        //bool = Borrar(ElementEliminar.get(i));
                         final File f = new File(ElementEliminar.get(i));
-                        //1r dialog de confirmacio:
-                        final Dialog dialog1 = new Dialog(FileManager.this);
-                        dialog1.setContentView(R.layout.confirmacio);
-                        dialog1.setTitle("¿borrar "+f.getName()+"?");
-                        Button btSi=(Button) dialog1.findViewById(R.id.buttonSiConfirmacio);
-                        final Button btNo = (Button)dialog1.findViewById(R.id.buttonCancelarConfirmacio);
-                        //butons del dialog:
-                        btSi.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(f.isDirectory()){
-                                    //2n dialog:
-                                    Log.d("Root","Es una carpeta");
-                                    if(f.listFiles().length!=0) {
-                                        Toast.makeText(FileManager.this,"La carpeta "+f.getName()+" te contingut",Toast.LENGTH_LONG).show();
-                                        //BorrarRecursivo(f);
-                                        //bool[0] = false;
-                                        Log.d("Root", "Borrat recursiu"+ bool[0]);
-                                    }
-                                }else{
-                                    Log.d("Root","Borro 1 fitxer o carpeta");
-                                    bool[0] =f.delete();
-                                    Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
-                                    intent2.putExtra("path", finalPathtemp1);
-                                    startActivity(intent2);
-                                    //b[0] = true;
-                                }
-                                Toast.makeText(FileManager.this,"¿Borrat? "+ bool[0],Toast.LENGTH_LONG).show();
-                                dialog1.dismiss();
+                        if (f.isDirectory()) {
+                            Log.d("Root", "Es una carpeta");
+                            if (f.listFiles().length != 0) {
+                                Toast.makeText(FileManager.this, "La carpeta " + f.getName() + " te contingut", Toast.LENGTH_LONG).show();
+                                BorrarRecursivo(f);
                             }
-                        });
-                        btNo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // bool[0]=false;
-                                Log.d("Root","Cancelar 1");
-                                dialog1.dismiss();
-                            }
-                        });
-                        dialog1.show();
-                        Log.d("Root","No es pot borrar bool= "+ bool[0]);
-                        Toast.makeText(FileManager.this,"No se a borrado",Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.d("Root", "Borro 1 fitxer o 1 carpeta");
+                            bool[0] = f.delete();
+                            Intent intent2 = new Intent(getApplicationContext(), FileManager.class);
+                            intent2.putExtra("path", finalPathtemp1);
+                            startActivity(intent2);
+                            //b[0] = true;
+                        }
+                        Toast.makeText(FileManager.this, "¿Borrat? " + bool[0], Toast.LENGTH_LONG).show();
                     }
                 }else{
                     Toast.makeText(FileManager.this, "SELECCIONI UN ELEMENT", Toast.LENGTH_LONG).show();
@@ -645,13 +619,13 @@ public class FileManager extends AppCompatActivity {
     }
 
         //borrado recursivo del contenido de la carpeta padre
-//            private void BorrarRecursivo(File f){
-//                if (f.isDirectory()) {
-//                    for (File hijos : f.listFiles())
-//                        BorrarRecursivo(hijos);
-//                }else {
-//                    f.delete();
-//                }
-//                Log.d("Root","Entro al borrat");
-//            }
+            private void BorrarRecursivo(File f){
+                if (f.isDirectory()) {
+                    for (File hijos : f.listFiles())
+                        BorrarRecursivo(hijos);
+                }else {
+                    f.delete();
+                }
+                Log.d("Root","Entro al borrat");
+            }
 }

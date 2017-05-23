@@ -20,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.File;
+import java.text.DecimalFormat;
+
 import ricardo.android_files_gallery.Files.FileManager;
 import ricardo.android_files_gallery.Fragments.FileManagerFragment;
 import ricardo.android_files_gallery.Fragments.Gallery_Fragment;
@@ -258,7 +261,8 @@ public class MainActivity extends AbsRuntimePermision
                 break;
         }
     }
-}
+
+    }
 /*
         Database database = new Database(this);
         Integer color = null;
@@ -298,40 +302,7 @@ public class MainActivity extends AbsRuntimePermision
             super.onBackPressed();
         }
     }
-
-    public String TamanyTotalMemoria(String ruta) {
-        DecimalFormat df = new DecimalFormat("###.##");
-        File arxiu = new File(ruta);
-        //ESPAI TOTAL
-        String numero = null;//bytes
-        float auxNum = arxiu.getTotalSpace();//numero temporal per pasar el valors i fer la combercio
-        if (arxiu.getTotalSpace() % 1024 != 0) { //kilobyte
-            numero = String.valueOf(auxNum) + " B";
-
-        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
-
-            numero = df.format(auxNum / 1024) + " KB";
-
-        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
-
-            numero = df.format(auxNum / 1048576) + " MB";
-
-        } else {
-
-            numero = df.format(auxNum / 1073741824) + " GB";
-        } else if (arxiu.getTotalSpace() % 1024 == 0 && arxiu.getTotalSpace() / 1048576 == 0) {
-
-            numero = df.format(auxNum / 1024) + " KB";
-
-        } else if (arxiu.getTotalSpace() / 1048576 != 0 && arxiu.getTotalSpace() / 1073741824 == 0) {
-
-            numero = df.format(auxNum / 1048576) + " MB";
-
-        } else {
-
-            numero = df.format(auxNum / 1073741824) + " GB";
-        }
-        return numero;
-    }
-}
 */
+
+
+
