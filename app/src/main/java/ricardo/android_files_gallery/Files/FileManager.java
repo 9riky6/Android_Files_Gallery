@@ -211,10 +211,10 @@ public class FileManager extends AppCompatActivity {
                     } else {
                         //intent esplicit per cada arxiu.
                         //TODO: POSAR INTENTS IMPLICITS!!!
-                        Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
-                        intent2.putExtra("path", children[finalI + aux].getAbsolutePath());
-                        intent2.putExtra("root", pathPare);
-                        startActivity(intent2);
+                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                        String title = "Elige wapo";
+                        Intent chooser = Intent.createChooser(sendIntent,title);
+                        startActivity(chooser);
                     }
                 }
             });

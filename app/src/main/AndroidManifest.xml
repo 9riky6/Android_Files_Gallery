@@ -30,7 +30,12 @@
             android:name=".Files.FileManager"
             android:label="managerFile"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.ALL_APPS"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Settings.Settings"
             android:label="@string/title_activity_settings"
