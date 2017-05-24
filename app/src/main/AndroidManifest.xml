@@ -32,8 +32,10 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS"></action>
+                <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
+                <data android:mimeType="image/*"></data>
+                <data android:mimeType="file/*"></data>
             </intent-filter>
         </activity>
         <activity

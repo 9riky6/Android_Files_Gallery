@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import ricardo.android_files_gallery.MainActivity;
 import ricardo.android_files_gallery.R;
@@ -210,11 +213,18 @@ public class FileManager extends AppCompatActivity {
                         startActivity(intent2);
                     } else {
                         //intent esplicit per cada arxiu.
-                        //TODO: POSAR INTENTS IMPLICITS!!!
-                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                        String title = "Elige wapo";
-                        Intent chooser = Intent.createChooser(sendIntent,title);
-                        startActivity(chooser);
+                        //TODO: POSAR INTENTS IMPLICITS puedo abrir PDF's
+                        File send = new File(children[finalI-1].getAbsolutePath());
+                        Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                        //intent1.setData(Uri.parse(children[finalI-1].getAbsolutePath()));
+                        Log.d("Root",children[finalI-1].getAbsolutePath());
+                        intent1.setData(Uri.fromFile(send));
+                        //Intent chooser = Intent.createChooser(intent1,"Select app: ");
+                        //comprovacio
+//                        PackageManager packageManager = getPackageManager();
+//                        List activities = packageManager.queryIntentActivities(intent1,PackageManager.MATCH_DEFAULT_ONLY);
+//                        Toast.makeText(FileManager.this,"Activitys "+String.valueOf(activities.size()),Toast.LENGTH_LONG).show();
+                        startActivity(intent1);
                     }
                 }
             });
