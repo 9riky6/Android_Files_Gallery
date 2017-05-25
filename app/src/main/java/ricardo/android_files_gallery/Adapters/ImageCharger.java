@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ImageCharger {
     final String MEDIA_PATH = Environment
             .getExternalStorageDirectory()
-            .getPath() + "/";
+            .getPath() + "/Pictures/";
     private ArrayList<String> imageList = new ArrayList<String>();
     private String jpgPattern = ".jpg";
     private String pngPattern = ".png";
