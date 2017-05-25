@@ -32,10 +32,11 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
+                <action android:name="android.intent.action.OPEN_DOCUMENT"></action>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
-                <data android:mimeType="image/*"></data>
-                <data android:mimeType="file/*"></data>
+                <category android:name="android.intent.category.OPENABLE"></category>
+                <data android:mimeType="*/*"></data>
             </intent-filter>
         </activity>
         <activity

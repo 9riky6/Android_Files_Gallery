@@ -1,12 +1,10 @@
 package ricardo.android_files_gallery;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,14 +15,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import java.io.File;
-import java.text.DecimalFormat;
 
 import ricardo.android_files_gallery.Files.FileManager;
 import ricardo.android_files_gallery.Fragments.FileManagerFragment;
@@ -33,7 +26,7 @@ import ricardo.android_files_gallery.Fragments.Storage_Fragment;
 import ricardo.android_files_gallery.Permission.AbsRuntimePermision;
 import ricardo.android_files_gallery.Settings.Settings;
 
-/* convercion
+/* conversion
 1 Kilobyte = 1,024 Bytes
 1 Megabyte = 1,048,576 Bytes
 1 Gigabyte = 1,073,741,824 Byte
@@ -126,16 +119,18 @@ public class MainActivity extends AbsRuntimePermision
         if (id == R.id.nav_home) {
             if (test != null && test.isVisible()) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                Toast.makeText(this, "NO peta", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, "NO peta", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         } else if (id == R.id.phone_storage) {
             intent = new Intent(getApplicationContext(), FileManager.class);
             intent.putExtra("path", Storage_Fragment.rutaInterna + "/"); //rutaInterna
+            intent.putExtra("root",Storage_Fragment.rutaInterna+"/");
             startActivity(intent);
         } else if (id == R.id.sd_storage) {
             intent = new Intent(getApplicationContext(), FileManager.class);
             intent.putExtra("path", Storage_Fragment.rutaExterna[0] + "/"); //rutaInterna
+            intent.putExtra("root",Storage_Fragment.rutaExterna[0]+"/");
             startActivity(intent);
         } else if (id == R.id.nav_galeria) {
             fragmentManager.beginTransaction().replace(R.id.fragment_container, new Gallery_Fragment()).commit();

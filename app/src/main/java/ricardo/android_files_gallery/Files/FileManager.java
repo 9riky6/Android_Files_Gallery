@@ -2,17 +2,16 @@ package ricardo.android_files_gallery.Files;
 
 
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +81,7 @@ public class FileManager extends AppCompatActivity {
         boolean home = true;
 
         //TODO: AÑADIR LAYOUT SOLO PARA EL ATRAS. IMG AND TEXT
-        //Afegeix el directori .. pare
+        //Afegeix el directori pare
         if (!(file.getAbsolutePath().equals(pathtemp))) {
             //Fem layout amb taula + inflater
             TableRow row = (TableRow) findViewById(R.id.Item);
@@ -148,7 +146,7 @@ public class FileManager extends AppCompatActivity {
                 size.setText(getSizefile(temp));
                 //tipo
                 String temp2 = children[i].getName();
-                Log.d("nombre ", temp2);
+               // Log.d("nombre ", temp2);
                 if (temp2.contains(".")) {
                     extension.setText("Extensio " + temp2.substring(temp2.lastIndexOf(".") + 1));
                     getImatge(temp2, imatge);
@@ -174,7 +172,7 @@ public class FileManager extends AppCompatActivity {
             final int finalI = i;
             final int aux;
 
-            //Auxiliar degut a la carpeta ..
+            //Auxiliar degut a la carpeta pare
             if (!finalRoot)
                 aux = -1;
             else
@@ -212,20 +210,43 @@ public class FileManager extends AppCompatActivity {
                         intent2.putExtra("root", pathPare);
                         startActivity(intent2);
                     } else {
-                        //intent esplicit per cada arxiu.
-                        //TODO: POSAR INTENTS IMPLICITS puedo abrir PDF's
+                        //intent esplicit per cada arxiu.e
+                        //TODO: POSAR INTENTS IMPLICITS
                         File send = new File(children[finalI-1].getAbsolutePath());
-                        Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                        //intent1.setData(Uri.parse(children[finalI-1].getAbsolutePath()));
-                        Log.d("Root",children[finalI-1].getAbsolutePath());
-                        intent1.setData(Uri.fromFile(send));
-                        //Intent chooser = Intent.createChooser(intent1,"Select app: ");
-                        //comprovacio
-//                        PackageManager packageManager = getPackageManager();
-//                        List activities = packageManager.queryIntentActivities(intent1,PackageManager.MATCH_DEFAULT_ONLY);
-//                        Toast.makeText(FileManager.this,"Activitys "+String.valueOf(activities.size()),Toast.LENGTH_LONG).show();
-                        startActivity(intent1);
+                        String send1 = children[finalI-1].getAbsolutePath();
+                        IntenstsImplicits(send,send1);
+
                     }
+                }
+                private void IntenstsImplicits(File send, String send1) {
+                    Intent intent1 = new Intent();
+                    //intent1.setData(Uri.parse(children[finalI-1].getAbsolutePath()));
+                    //Log.d("Root",children[finalI-1].getAbsolutePath());
+                    intent1.setType("image/*");
+                    intent1.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                    intent1.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent1.putExtra(intent1.getAction(),send1);
+                    //comprovacio
+                    PackageManager pm = getPackageManager();
+                    List<ResolveInfo> activities = pm.queryIntentActivities(intent1,PackageManager.MATCH_DEFAULT_ONLY);
+                    List<LabeledIntent> otherAppIntentList = new ArrayList<LabeledIntent>();
+                    for(int i=0;i<activities.size();i++){
+                        ResolveInfo ri = activities.get(i);
+                        String packaName = ri.activityInfo.packageName;
+                        Intent intentToAdd = new Intent();
+                            intentToAdd.setComponent(new ComponentName(packaName,ri.activityInfo.name));
+                            intentToAdd.setAction(intent1.getAction());
+                            intentToAdd.setType("image/*");
+                            intentToAdd.setPackage(packaName);
+                            intentToAdd.putExtra(intent1.getAction(),send1);
+                        otherAppIntentList.add(new LabeledIntent(intentToAdd,packaName,ri.loadLabel(pm),ri.icon));
+                    }
+                    //combertim intentList to array
+                    LabeledIntent[] extraIntents = otherAppIntentList.toArray(new LabeledIntent[otherAppIntentList.size()]);
+                    // create chooser y poner todos los intents al chooser
+                    Intent ver = Intent.createChooser(intent1,"Choose app: ");
+                   // Toast.makeText(FileManager.this,"Activitys "+String.valueOf(activities.size()),Toast.LENGTH_LONG).show();
+                    startActivity(ver);
                 }
             });
         }
@@ -235,7 +256,7 @@ public class FileManager extends AppCompatActivity {
                 @Override
                 public boolean onLongClick(View view) {
                     ElementEliminar.add(children[finalI-1].getAbsolutePath());
-                    Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(),Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(FileManager.this,children[finalI-1].getAbsolutePath(),Toast.LENGTH_LONG).show();
                     tabla.getChildAt(finalI).setBackgroundResource(R.drawable.Selected_item);
                     selecteItemRemove.setVisibility(View.VISIBLE);
                     bBorrarCarpeta.setVisibility(View.VISIBLE);
@@ -429,7 +450,7 @@ public class FileManager extends AppCompatActivity {
     }
     private void getImatge(String name, ImageView imatge) {
         String extencionFile = name.substring(name.lastIndexOf(".") + 1);
-        Log.d("Contenido extencionFile", extencionFile);
+        //Log.d("Contenido extencionFile", extencionFile);
 
         if (extencionFile.equalsIgnoreCase("jpg")) {
             imatge.setImageResource(R.drawable.jpg);
@@ -591,11 +612,11 @@ public class FileManager extends AppCompatActivity {
     //PER MILLORAR mirar lo de les carpetes.
     public String getSize(String ruta) {//directori/carpeta
         File f = new File(ruta);
-        DecimalFormat df = new DecimalFormat("####.###");
+        DecimalFormat df = new DecimalFormat("####.##");
         String Sumatotal = null;//bytes
         File[] files=null;
         float suma = 0;
-        Log.d("Root","Entro");
+       // Log.d("Root","Entro");
         if(f.isDirectory()){
             files = f.listFiles();
             if(files.length!=0) {
@@ -607,9 +628,9 @@ public class FileManager extends AppCompatActivity {
                 int aux= (int) suma;
 
                 if (aux <=1024) {
-                    Sumatotal = df.format(suma) + " B";
+                    Sumatotal = df.format(suma) + " B ";
                 } else if (aux >1024 && aux <=1048576 ) {
-                    Sumatotal = df.format(suma / 1024) + " KB";
+                    Sumatotal = df.format(suma / 1024) + " KB ";
                 } else if (aux > 1048576  && aux <= 1073741824) {
                     Sumatotal = df.format(suma / 1048576) + " MB ";
                 } else if (aux > 1073741824) {
@@ -617,7 +638,7 @@ public class FileManager extends AppCompatActivity {
                 } else if (aux == 0) {
                     Sumatotal = "Vacio";
                 }
-                Log.d("Root", String.valueOf(aux));
+               // Log.d("Root", String.valueOf(aux));
             }else{
                 Sumatotal ="Vacio";
             }
@@ -627,21 +648,21 @@ public class FileManager extends AppCompatActivity {
         return Sumatotal;
     }
     public String getSizefile(long num) {//arxius
-        DecimalFormat df = new DecimalFormat("###0.##");
+        DecimalFormat df = new DecimalFormat("##0.##");
         float n = (float) num;
         String valor;
         if (num % 1024 != 0 && num / 1024 == 0) {
-            valor = String.valueOf(n) + " B";
+            valor = String.valueOf(n) + " B ";
         } else if (num / 1024 != 0) {
 
-            valor = df.format(n / 1024) + " KB";
+            valor = df.format(n / 1024) + " KB ";
 
         } else if (num % 1048576 != 0) {
 
-            valor = df.format(n / 1048576) + " MB";
+            valor = df.format(n / 1048576) + " MB ";
         } else {
 
-            valor = df.format(n / 1073741824) + " GB";
+            valor = df.format(n / 1073741824) + " GB ";
         }
         return valor;
     }
@@ -667,8 +688,8 @@ public class FileManager extends AppCompatActivity {
                     BorrarRecursivo(fichero[x]);
             }
                 bool = fichero[x].delete();
-            Log.d("Root", "Entro al borrat");
-            Log.d("Root", "borrat? " + bool);
+//            Log.d("Root", "Entro al borrat");
+//            Log.d("Root", "borrat? " + bool);
         }
             }
 }
