@@ -612,7 +612,7 @@ public class FileManager extends AppCompatActivity {
     //PER MILLORAR mirar lo de les carpetes.
     public String getSize(String ruta) {//directori/carpeta
         File f = new File(ruta);
-        DecimalFormat df = new DecimalFormat("####.##");
+        DecimalFormat df = new DecimalFormat("##.##");
         String Sumatotal = null;//bytes
         File[] files=null;
         float suma = 0;
@@ -620,8 +620,10 @@ public class FileManager extends AppCompatActivity {
         if(f.isDirectory()){
             files = f.listFiles();
             if(files.length!=0) {
-
                 for (int i = 0; i < files.length; i++) {
+                    if(files[i].isDirectory()){
+                        getSize(files[i].getAbsolutePath());
+                    }
                     float auxNum = files[i].length();
                     suma = suma + auxNum;
                 }
@@ -648,7 +650,7 @@ public class FileManager extends AppCompatActivity {
         return Sumatotal;
     }
     public String getSizefile(long num) {//arxius
-        DecimalFormat df = new DecimalFormat("##0.##");
+        DecimalFormat df = new DecimalFormat("##.##");
         float n = (float) num;
         String valor;
         if (num % 1024 != 0 && num / 1024 == 0) {
