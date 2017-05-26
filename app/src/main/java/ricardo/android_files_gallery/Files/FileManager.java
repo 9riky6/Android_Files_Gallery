@@ -658,19 +658,21 @@ public class FileManager extends AppCompatActivity {
     public String getSizefile(long num) {//arxius
         DecimalFormat df = new DecimalFormat("##.##");
         float n = (float) num;
-        String valor;
-        if (num % 1024 != 0 && num / 1024 == 0) {
+        String valor = null;
+        if (num <= 1024) {
             valor = String.valueOf(n) + " B ";
-        } else if (num / 1024 != 0) {
+        } else if (num > 1024 && num <= 1048576) {
 
             valor = df.format(n / 1024) + " KB ";
 
-        } else if (num % 1048576 != 0) {
+        } else if (num > 1048576 && num <= 1073741824) {
 
             valor = df.format(n / 1048576) + " MB ";
-        } else {
+        } else if(num > 1073741824){
 
             valor = df.format(n / 1073741824) + " GB ";
+        }else if(num ==0){
+            valor = "0";
         }
         return valor;
     }
