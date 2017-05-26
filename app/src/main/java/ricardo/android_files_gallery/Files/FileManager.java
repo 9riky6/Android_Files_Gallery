@@ -1,6 +1,4 @@
 package ricardo.android_files_gallery.Files;
-
-
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -32,125 +30,115 @@ import java.util.List;
 
 import ricardo.android_files_gallery.MainActivity;
 import ricardo.android_files_gallery.R;
-
-
 public class FileManager extends AppCompatActivity {
+    //Arraay para guardar los valores a eliminar
     ArrayList<String> ElementEliminar = new ArrayList<String>(100);
+    //Botones de control de carpetas
     ImageButton bCrearCarpeta ;
     ImageButton bBorrarCarpeta;
     ImageButton bCopiarCarpeta;
     ImageButton selecteItemRemove;
+    //Elemento para el cambio de activitys
     Intent intent = null;
+    //Control de rutas
     String pathPare,pathtemp;
+    //Contol de carpetas y archivos
     File[] children;
-    Context context;
-    private String NomCarpeta;
+    private String[] NomCarpeta;
     float suma=0;
+    //
     private SharedPreferences sharedPreferences;
     private int theme;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Select theme saved by user
         theme();
         setContentView(R.layout.file_manager);
-       final ArrayList<String> ElementEliminar = new ArrayList<String>(100);
-        ImageButton bCrearCarpeta = (ImageButton)findViewById(R.id.imageButton_crear_carpeta);
-        final ImageButton bBorrarCarpeta = (ImageButton)findViewById(R.id.imageButton_borrar_carpeta);
-        ImageButton bCopiarCarpeta = (ImageButton)findViewById(R.id.imageButton_copiar_carpeta);
-        final ImageButton selecteItemRemove = (ImageButton)findViewById(R.id.remove);
-        Intent intent = getIntent();
-
+        ElementEliminar = new ArrayList<String>(100);
+        bCrearCarpeta = (ImageButton)findViewById(R.id.imageButton_crear_carpeta);
+        bBorrarCarpeta = (ImageButton)findViewById(R.id.imageButton_borrar_carpeta);
+        bCopiarCarpeta = (ImageButton)findViewById(R.id.imageButton_copiar_carpeta);
+        selecteItemRemove = (ImageButton)findViewById(R.id.remove);
+        intent = getIntent();
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        //Aixo fa que sempre deixi la ultima barra
-        String pathtemp = intent.getStringExtra("path");//actual
-        final String pathPare = intent.getStringExtra("root");//pare
-
+        //Recogida de rutas
+        pathtemp = intent.getStringExtra("path");//actual
+        pathPare = intent.getStringExtra("root");//pare
+        //Siempre dejara la / al final
         pathtemp = pathtemp.substring(0, pathtemp.lastIndexOf("/") + 1);
         getSupportActionBar().setTitle(pathtemp);
-
+        //combretimos la ruta a file para poder tratarla
         File file = new File(pathtemp);
+        //instaciamos la tabla donde ira todos los items
         final TableLayout tabla = (TableLayout) findViewById(R.id.Contenido);
+        //borramos el contenido anterior para poder rellenarlo con el nuevo
         tabla.removeAllViews();
-
+        //nos localizamos en la "raiz"
         boolean home = true;
-
         //TODO: AÑADIR LAYOUT SOLO PARA EL ATRAS. IMG AND TEXT
-        //Afegeix el directori pare
+        //Añadimos el item de ATRAS.
         if (!(file.getAbsolutePath().equals(pathtemp))) {
-            //Fem layout amb taula + inflater
+            //Generamos el elemento de la tabla
             TableRow row = (TableRow) findViewById(R.id.Item);
+            //Inflamos un inflater para al tabla
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //pasem el layoud la row de la taula.
+            //Inflamos la tabla con los elementos de la tabla.
             TableRow rowLayout = (TableRow) inflater.inflate(R.layout.item_list, row, false);
-
-            //Fem la imatge.
+            //Colocamos la imagen
             ImageView imatge = (ImageView) rowLayout.findViewById(R.id.icono);
             imatge.setImageResource(R.drawable.ic_arrow_back_black_24dp);
-
-            //Fem el nom.
+            //El nombre
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
             cami.setText(pathtemp);
-
-//            //Modifiquem el size i el type
+//            Modificamos el tamaño y la extension ya que el elemento Atras no tinene no los inflamos en ram
             TextView type = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
             size.setVisibility(View.GONE);
             type.setVisibility(View.GONE);
-
-
-            //Afegim la informació a la taula
+            //Añadimos la informacion generada a la tabla.
             tabla.addView(rowLayout);
-
             home = false;
         }
-
-        //Fa el ls. També introdueix imatge.
-        final File[] children = file.listFiles();
+        //Hacer el LS (ya que android utiliza linux)
+        //Y añadir las imagenes de las carpetas y ficheros(todos al principio tinen la misma mas tarde lo tratamos)
+        children = file.listFiles();
+        //Ordenamos por nombre
         Arrays.sort(children);
-
         for (int i = 0; i < children.length; i++) {
-
-            //Fem layout amb taula + inflater
+            //Inflamos otra vez el item de la tabla con el inflater con como rellenaremos la tabla.
             TableRow row = (TableRow) findViewById(R.id.Item);
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TableRow rowLayout = (TableRow) inflater.inflate(R.layout.item_list, row, false);
-
-            //Fem la imatge.
+            //Colocamos las imagenes dependiendo de que es el elemento seleccionado
             ImageView imatge = (ImageView) rowLayout.findViewById(R.id.icono);
             if (children[i].isDirectory()) {
                 imatge.setImageResource(R.drawable.folder);
             } else {
                 imatge.setImageResource(R.drawable.unknown);
             }
-
-            //Fem el nom.
+            //Colocamos el nombre
             TextView cami = (TextView) rowLayout.findViewById(R.id.textViewChildren);
             cami.setText(children[i].getName());
-
-
-            //Si es un fitxer, que indiqui la mida i el tipus de fitxer
-            //Si es un directori, que indiqui que ho es i el pesa.
+            //Si es un fichero idicara el tamanño y la extension
+            //Si es una carpeta que indique que lo es y el tamanyo que tiene.
             TextView extension = (TextView) rowLayout.findViewById(R.id.textViewType);
             TextView size = (TextView) rowLayout.findViewById(R.id.textViewSize);
-
-            if (children[i].isFile()) {//arxiu
-                //tamaño
+            if (children[i].isFile()) {//En el caso del ser un archivo
+                //Calculamos el tamaño
                 long temp = children[i].length();
-                //PER MILLORAR
                 size.setText(getSizefile(temp));
-                //tipo
+                //Calculamos el tipo
                 String temp2 = children[i].getName();
-               // Log.d("nombre ", temp2);
-                if (temp2.contains(".")) {
+                if (temp2.contains(".")) {//si contiene un punto podemos esplitear al punto para saber que extension tiene.
                     extension.setText("Extensio " + temp2.substring(temp2.lastIndexOf(".") + 1));
+                    //Tratamos la imgaen pasando el nombre del archivo y el icono .
                     getImatge(temp2, imatge);
                 } else {
+                    //Caso en el que no tiene extension pero es un archivo.
                     extension.setText("Arxiu");
                 }
             } else { //Carpeta
@@ -269,7 +257,7 @@ public class FileManager extends AppCompatActivity {
         bCrearCarpeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] NomCarpeta = new String[1];
+                NomCarpeta = new String[1];
                 final Dialog dialog = new Dialog(FileManager.this);
                 dialog.setContentView(R.layout.input);
                 dialog.setTitle("Nombre Carpeta nueva:");
