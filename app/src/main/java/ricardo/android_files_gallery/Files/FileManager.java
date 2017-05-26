@@ -250,6 +250,7 @@ public class FileManager extends AppCompatActivity {
                 }
             });
         }
+        // seleccion de elementos a borrar.
         for (int i = 1; i <tabla.getChildCount(); i++) {
             final int finalI = i;
             tabla.getChildAt(i).setOnLongClickListener(new View.OnLongClickListener() {
