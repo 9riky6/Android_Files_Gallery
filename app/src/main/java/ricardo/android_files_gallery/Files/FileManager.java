@@ -45,10 +45,9 @@ public class FileManager extends AppCompatActivity {
     File[] children;
     Context context;
     private String NomCarpeta;
-
+    float suma=0;
     private SharedPreferences sharedPreferences;
     private int theme;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -616,7 +615,7 @@ public class FileManager extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("##.##");
         String Sumatotal = null;//bytes
         File[] files=null;
-        float suma = 0;
+
        // Log.d("Root","Entro");
         if(f.isDirectory()){
             files = f.listFiles();
