@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -621,30 +622,35 @@ public class FileManager extends AppCompatActivity {
             files = f.listFiles();
             if(files.length!=0) {
                 for (int i = 0; i < files.length; i++) {
-                    if(files[i].isDirectory()){
+                    if (files[i].isDirectory()) {
+                        Log.d("Root",files[i].getAbsolutePath());
                         getSize(files[i].getAbsolutePath());
+                    } else {
+                        float auxNum = files[i].length();
+                        suma = suma + auxNum;
                     }
-                    float auxNum = files[i].length();
-                    suma = suma + auxNum;
                 }
-                int aux= (int) suma;
-
-                if (aux <=1024) {
-                    Sumatotal = df.format(suma) + " B ";
-                } else if (aux >1024 && aux <=1048576 ) {
-                    Sumatotal = df.format(suma / 1024) + " KB ";
-                } else if (aux > 1048576  && aux <= 1073741824) {
-                    Sumatotal = df.format(suma / 1048576) + " MB ";
-                } else if (aux > 1073741824) {
-                    Sumatotal = df.format(suma / 1073741824) + " GB ";
-                } else if (aux == 0) {
-                    Sumatotal = "Vacio";
+                int aux = (int) suma;
+                if (aux != 0) {
+                    if (aux <= 1024) {
+                        Sumatotal = df.format(suma) + " B ";
+                    } else if (aux > 1024 && aux <= 1048576) {
+                        Sumatotal = df.format(suma / 1024) + " KB ";
+                    } else if (aux > 1048576 && aux <= 1073741824) {
+                        Sumatotal = df.format(suma / 1048576) + " MB ";
+                    } else if (aux > 1073741824) {
+                        Sumatotal = df.format(suma / 1073741824) + " GB ";
+                    } else if (aux == 0) {
+                        suma= suma +0;
+                        Sumatotal = "Vacio";
+                    }
                 }
-               // Log.d("Root", String.valueOf(aux));
             }else{
+                suma = suma +0;
                 Sumatotal ="Vacio";
             }
         }else{
+            suma = suma +0;
             Sumatotal="Vacio";
         }
         return Sumatotal;
