@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,25 +35,31 @@ public class ColorChooserDialog extends DialogFragment
     Intent intent;
     Boolean themeChanged = false;
 
+    /**
+     * En este metodo recogeremos el color que queremos aplicar he inflaremos
+     * un dialog donde aparecen los colores.
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // Save current theme to use when user press dismiss inside dialog
         sharedPreferences = getActivity().getSharedPreferences("VALUES", Context.MODE_PRIVATE);
         currentTheme = sharedPreferences.getInt("THEME", 0);
-
-        //inflate theme_dialog.xml
         view = inflater.inflate(R.layout.theme_dialog, container);
-
-        // remove title (already defined in theme_dialog.xml)
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // Declare buttons and onClick methods
         dialogButtons();
 
         return view;
     }
 
+    /**
+     * Metodo donde buscamos todos los campos en el layout asociado a esta clase
+     * y creamos los listeneres de cada campo.
+     */
     private void dialogButtons() {
         cardView1 = (CardView) view.findViewById(R.id.card_view1);
         cardView2 = (CardView) view.findViewById(R.id.card_view2);
@@ -123,6 +128,12 @@ public class ColorChooserDialog extends DialogFragment
         buttonAgree.setOnClickListener(this);
     }
 
+    /**
+     * Gestionamos el click en cada color del dialog guardar el nuevo tema,
+     * para aplicarlo tendremos que pulsar en Agree
+     *
+     * @param v
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.card_view1:

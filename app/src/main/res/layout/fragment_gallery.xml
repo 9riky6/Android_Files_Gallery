@@ -6,7 +6,7 @@
     tools:context="ricardo.android_files_gallery.Fragments.Gallery_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/gallery_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

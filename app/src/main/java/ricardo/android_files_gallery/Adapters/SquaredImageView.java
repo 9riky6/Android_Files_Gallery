@@ -1,7 +1,7 @@
 package ricardo.android_files_gallery.Adapters;
 
 /**
- * Created by AMS2-22 on 23/05/2017.
+ * Created by Ricardo on 23/05/2017.
  */
 
 import android.content.Context;

@@ -1,22 +1,18 @@
 package ricardo.android_files_gallery.Settings;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import ricardo.android_files_gallery.R;
 
@@ -28,41 +24,42 @@ import ricardo.android_files_gallery.R;
 public class Settings extends AppCompatActivity
         implements View.OnClickListener {
 
+    /**
+     * Variables
+     */
     final Context context = this;
     Toolbar toolbar;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    ScrollView scrollView;
-    ActionBarDrawerToggle mDrawerToggle;
-    int theme, scrollPositionX = 0, scrollPositionY = -100;
-    Intent intent;
+    int theme;
     FrameLayout statusBar;
     RelativeLayout relativeLayoutChooseTheme;
-
     Boolean homeButton = false, themeChanged;
-    ViewGroup.LayoutParams layoutParamsStatusBar;
 
-
+    /**
+     * Metodo por derfecto onCreate.
+     * Recogeremos lo que tengamos creado por defecto en el super del metodo y nosotros llamaremos a las siguientes funciones.
+     * Theme, toolbarStatusBar, navigationBar, settingsButton, fix BooleanDownload y themeChanged
+     * Ahora explicaremos cada metodo por sepatado
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Select theme saved by user (always before setContentView)
         theme();
-        // Set content to the view
         setContentView(R.layout.activity_settings);
-        //Setup Status Bar and Toolbar
         toolbarStatusBar();
-        // Fix issues for each version and modes (check method at end of this file)
         navigationBarStatusBar();
-        // Declare settings buttons.
         settingsButtons();
-
-        // Fix speed/download for setting navigation drawer on back to main activity.
         fixBooleanDownload();
-        // Check if theme is changed to start main activity with toolbar back button
         themeChanged();
     }
 
+    /**
+     * Con este metodo lo que lograremos sera realizar las modificaciones,
+     * sin este metodo las modificaciones que hicieramos no se guardarian.
+     */
     public void fixBooleanDownload() {
 
         // Fix download boolean value
@@ -71,6 +68,12 @@ public class Settings extends AppCompatActivity
         editor.apply();
     }
 
+    /**
+     * Con este metodo l oque conseguimos es que segun la version de Android
+     * del telefono movil apliquemos los colores de una manera o de otra, dado que
+     * dependiendo de la version tenemos que tratar la toolbar y la statusbar de una
+     * manera u otra.
+     */
     private void navigationBarStatusBar() {
 
         // Fix portrait issues
@@ -113,10 +116,14 @@ public class Settings extends AppCompatActivity
         }
     }
 
+    /**
+     * El uso de este metodo es para modificar la toolbar de manera que en el titulo
+     * se muestre Settings y aparezca una flecha atras que nos mande al Home.
+     */
     private void toolbarStatusBar() {
         // Cast toolbar and status bar
         statusBar = (FrameLayout) findViewById(R.id.statusBar);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // Get support to the toolbar and change its title
 
@@ -126,12 +133,23 @@ public class Settings extends AppCompatActivity
 
     }
 
+    /**
+     * Recogemos la configuracion que tengamos del tema y lanzamos un metodo
+     * que comprueba cual es el que tema que tenemos guardado en la configuracion.
+     */
     public void theme() {
         sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
         theme = sharedPreferences.getInt("THEME", 0);
         settingTheme(theme);
     }
 
+    /**
+     * Comprobamos el tema que pasamos por parametros y pedendiendo del integer,
+     * segun el valor entraremos en uno de los siguientes caso y modificaremos la configuracion
+     * del sharedPreferences.
+     *
+     * @param theme
+     */
     public void setThemeFragment(int theme) {
         switch (theme) {
             case 1:
@@ -257,6 +275,11 @@ public class Settings extends AppCompatActivity
         }
     }
 
+    /**
+     * Recogemos el integer y aplicamos el tema segun el integer que le pasamos.
+     *
+     * @param theme
+     */
     public void settingTheme(int theme) {
         switch (theme) {
             case 1:
@@ -355,16 +378,27 @@ public class Settings extends AppCompatActivity
         }
     }
 
+    /**
+     * Comprobamos si es diferente al Main activity para aplicar el boton atras a la toolbar
+     */
     private void themeChanged() {
         themeChanged = sharedPreferences.getBoolean("THEMECHANGED", false);
         homeButton = true;
     }
 
+    /**
+     * Con este metodo recogemos los indices del layout para poder aplicar cambios.
+     */
     private void settingsButtons() {
         relativeLayoutChooseTheme = (RelativeLayout) findViewById(R.id.relativeLayoutChooseTheme);
         relativeLayoutChooseTheme.setOnClickListener(this);
     }
 
+    /**
+     * En este metodo preparamos el onClick del boton de cambio de color.
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

@@ -26,6 +26,9 @@ import ricardo.android_files_gallery.Fragments.Storage_Fragment;
 import ricardo.android_files_gallery.Permission.AbsRuntimePermision;
 import ricardo.android_files_gallery.Settings.Settings;
 
+/**
+ * The type Main activity.
+ */
 /* conversion
 1 Kilobyte = 1,024 Bytes
 1 Megabyte = 1,048,576 Bytes
@@ -38,7 +41,9 @@ public class MainActivity extends AbsRuntimePermision
         Gallery_Fragment.OnFragmentInteractionListener,
         FileManagerFragment.OnFragmentInteractionListener {
 
-
+    /**
+     * Variables
+     */
     private static final int REQUEST_PERMISSION = 10;
     private boolean load = true;
     private boolean Permisions = false;
@@ -50,6 +55,14 @@ public class MainActivity extends AbsRuntimePermision
     private Dialog dialog;
     private Button bt1Dialog;
 
+    /**
+     * Metodo onCreate aqui comprobamos el color de la aplicacion y se lo aplicamos a la activity,
+     * creamos la toolbar y el drawerLayout en el que aplicaremos todo.
+     * <p>
+     * Tambien configuraremos el menu lateral y por ultimo realizaremos la peticion de permisos.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +106,17 @@ public class MainActivity extends AbsRuntimePermision
 
     }
 
+    /**
+     * @param requestCode
+     */
     @Override
     public void onPermissionsGranted(int requestCode) {
+
     }
 
+    /**
+     * Metodo por defecto de las Activitys.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -107,6 +127,12 @@ public class MainActivity extends AbsRuntimePermision
         }
     }
 
+    /**
+     * Asignar acciones a cada opcion del menu lateral.
+     *
+     * @param item
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -119,18 +145,18 @@ public class MainActivity extends AbsRuntimePermision
         if (id == R.id.nav_home) {
             if (test != null && test.isVisible()) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-               // Toast.makeText(this, "NO peta", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "NO peta", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         } else if (id == R.id.phone_storage) {
             intent = new Intent(getApplicationContext(), FileManager.class);
             intent.putExtra("path", Storage_Fragment.rutaInterna + "/"); //rutaInterna
-            intent.putExtra("root",Storage_Fragment.rutaInterna+"/");
+            intent.putExtra("root", Storage_Fragment.rutaInterna + "/");
             startActivity(intent);
         } else if (id == R.id.sd_storage) {
             intent = new Intent(getApplicationContext(), FileManager.class);
             intent.putExtra("path", Storage_Fragment.rutaExterna[0] + "/"); //rutaInterna
-            intent.putExtra("root",Storage_Fragment.rutaExterna[0]+"/");
+            intent.putExtra("root", Storage_Fragment.rutaExterna[0] + "/");
             startActivity(intent);
         } else if (id == R.id.nav_galeria) {
             fragmentManager.beginTransaction().replace(R.id.fragment_container, new Gallery_Fragment()).commit();
@@ -152,11 +178,14 @@ public class MainActivity extends AbsRuntimePermision
         return true;
     }
 
+    /**
+     * Metodo para mostrar el pop- up de About-us.
+     */
     private void About_us() {
         dialog = new Dialog(MainActivity.this, R.style.Title);
         dialog.setContentView(R.layout.about_us);
         dialog.setTitle("Android Files Manager");
-        bt1Dialog = (Button)dialog.findViewById(R.id.buttonCerrar_about);
+        bt1Dialog = (Button) dialog.findViewById(R.id.buttonCerrar_about);
         bt1Dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,16 +194,32 @@ public class MainActivity extends AbsRuntimePermision
         });
         dialog.show();
     }
+
+    /**
+     * Recogemos la configuracion que tengamos del tema y lanzamos un metodo
+     * que comprueba cual es el que tema que tenemos guardado en la configuracion.
+     */
     public void theme() {
         sharedPreferences = getSharedPreferences("VALUES", Context.MODE_PRIVATE);
         theme = sharedPreferences.getInt("THEME", 0);
         settingTheme(theme);
     }
 
+    /**
+     * Este metodo solo lo ejecutamos porque es obligatorio al implementar fragments.
+     *
+     * @param uri
+     */
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    /**
+     * Recogemos el integer y aplicamos el tema segun el integer que le pasamos.
+     *
+     * @param theme the theme
+     */
     public void settingTheme(int theme) {
         switch (theme) {
             case 1:
@@ -273,46 +318,6 @@ public class MainActivity extends AbsRuntimePermision
         }
     }
 }
-/*
-        Database database = new Database(this);
-        Integer color = null;
-        try {
-            color = database.getInt(DBAccess.COLOR);
-            Log.d("asd", color.toString());
-        } catch (SnappydbException e) {
-            e.printStackTrace();
-        }
-        if (color == null) {
-            try {
-                database.putInt(DBAccess.COLOR, Constant.sky);
-            } catch (SnappydbException e) {
-                e.printStackTrace();
-            }
-            // /storage/emulated/0[1,2,...]
-            if (TextUtils.isEmpty(rawUserId)) {
-                rv.add(rawEmulatedStorageTarget);
-            } else {
-                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
-            }
-        }
-        // Add all secondary storages
-        if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
-            // All Secondary SD-CARDs splited into array
-            final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
-            Collections.addAll(rv, rawSecondaryStorages);
-        }
-        return rv.toArray(new String[rv.size()]);
-    }
-
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-*/
 
 
 

@@ -81,6 +81,15 @@ public class Gallery_Fragment extends Fragment {
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
+    /**
+     * En este metodo cuando estemos visualizando el fragment crearemos un GridView
+     * donde mostraremos todas la imagenes que tenemos en la memoria interna del
+     * telefono movil.
+     * Para ello pasaremos un adapter a neustra gridView.
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

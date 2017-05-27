@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by AMS2-22 on 23/05/2017.
+ * Created by Ricardo on 23/05/2017.
  */
 
 public class ImageCharger {

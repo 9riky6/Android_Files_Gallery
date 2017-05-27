@@ -14,7 +14,7 @@ import android.util.SparseArray;
 import android.view.View;
 
 /**
- * Created by AMS2-22 on 18/05/2017.
+ * Created by Ricardo on 18/05/2017.
  */
 
 public abstract class AbsRuntimePermision extends AppCompatActivity {
@@ -26,8 +26,22 @@ public abstract class AbsRuntimePermision extends AppCompatActivity {
         mErrorString = new SparseArray();
     }
 
+    /**
+     * Metodo abstracto para para controlar si se han aceptado los permisos.
+     *
+     * @param requestCode
+     */
     public abstract void onPermissionsGranted(int requestCode);
 
+    /**
+     * Metodo publico para la peticion de los permisos, en este metodo pasaremos los permisos que queremos,
+     * un mensaje que es el que se mostrara en el Snackbar en caso de no aceptar los permisos y
+     * un valor que assignaremos en caso de que falle algo de los permissos.
+     *
+     * @param requestedPermission
+     * @param stringId
+     * @param requestCode
+     */
     public void requestAppPermissions(final String[] requestedPermission, final int stringId, final int requestCode) {
         mErrorString.put(requestCode, stringId);
 
@@ -54,6 +68,13 @@ public abstract class AbsRuntimePermision extends AppCompatActivity {
         }
     }
 
+    /**
+     * Metodo de comprobacion si se han solicitado los permisos y si se han aceptado.
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -71,7 +92,7 @@ public abstract class AbsRuntimePermision extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent i = new Intent();
                     i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    i.setData(Uri.parse("package:"+getPackageName()));
+                    i.setData(Uri.parse("package:" + getPackageName()));
                     i.addCategory(Intent.CATEGORY_DEFAULT);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
