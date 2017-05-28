@@ -5,17 +5,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ricardo.android_files_gallery.Adapters.GridAdapter;
-import ricardo.android_files_gallery.Adapters.ImageCharger;
+import ricardo.android_files_gallery.Adapters.GalleryAdapter;
 import ricardo.android_files_gallery.R;
 
 
@@ -27,40 +30,36 @@ import ricardo.android_files_gallery.R;
  * Use the {@link Gallery_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Gallery_Fragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class Gallery_Fragment extends Fragment{
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // region Constants
+    public static final String KEY_IMAGES = "KEY_IMAGES";
+    public static final String KEY_POSITION = "KEY_POSITION";
+    public static final String KEY_TITLE = "KEY_TITLE";
+
     List<String> imageArray = new ArrayList<String>();
     ArrayAdapter<String> arrayAdapter;
-    GridAdapter myImageAdapter;
 
     private OnFragmentInteractionListener mListener;
+    private ArrayList<String> images;
+    private RecyclerView recyclerView;
+    private String title;
+    private Toolbar toolbar;
 
 
     public Gallery_Fragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Gallery_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Gallery_Fragment newInstance(String param1, String param2) {
+    public static Gallery_Fragment newInstance(Bundle extras) {
+        Gallery_Fragment fragment = new Gallery_Fragment();
+        fragment.setArguments(extras);
+        return fragment;
+    }
+
+    public static Gallery_Fragment newInstance() {
         Gallery_Fragment fragment = new Gallery_Fragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +68,8 @@ public class Gallery_Fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            images = getArguments().getStringArrayList(KEY_IMAGES);
+            title = getArguments().getString(KEY_TITLE);
         }
     }
 
@@ -94,16 +93,25 @@ public class Gallery_Fragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GridView gridView = (GridView) getActivity().findViewById(R.id.gallery_gridview);
-        myImageAdapter = new GridAdapter(getContext());
-        gridView.setAdapter(myImageAdapter);
+        GridView gallery = (GridView) getActivity().findViewById(R.id.galleryGridView);
 
-        ImageCharger charger = new ImageCharger();
-        ArrayList<String> images = charger.getPlayList();
+        gallery.setAdapter(new GalleryAdapter(getActivity()));
 
-        for (String image : images) {
-            myImageAdapter.add(image);
-        }
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                if (null != images && !images.isEmpty())
+                    Toast.makeText(
+                            getContext(),
+                            "position " + position + " " + images.get(position),
+                            Toast.LENGTH_SHORT).show();
+                ;
+
+            }
+        });
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -129,6 +137,19 @@ public class Gallery_Fragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    //Fullscreen
+//    @Override
+//    public void onImageClick(int position) {
+//        Intent intent = new Intent(getContext(), FullScreenImageGalleryActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putStringArrayList(FullScreenImageGalleryActivity.KEY_IMAGES, images);
+//        bundle.putInt(FullScreenImageGalleryActivity.KEY_POSITION, position);
+//        intent.putExtras(bundle);
+//
+//        startActivity(intent);
+//
+//    }
 
     /**
      * This interface must be implemented by activities that contain this

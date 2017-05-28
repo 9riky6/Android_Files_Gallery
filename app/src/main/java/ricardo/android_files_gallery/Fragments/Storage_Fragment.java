@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ricardo.android_files_gallery.Files.FileManager;
+import ricardo.android_files_gallery.MainActivity;
 import ricardo.android_files_gallery.R;
 
 
@@ -338,18 +339,18 @@ public class Storage_Fragment extends Fragment {
         //Toast.makeText(MainActivity.this,mostrar, Toast.LENGTH_LONG).show();
         //File manager <3
 
-//        Intent intent = new Intent(getContext(), FileManager.class);
-//        intent.putExtra("path", rutaInterna + "/"); //rutaInterna
-//        intent.putExtra("root", rutaInterna + "/");
-//        startActivity(intent);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("path", rutaInterna + "/");
-        bundle.putString("root", rutaInterna + "/");
-        FileManagerFragment fragment = new FileManagerFragment();
-        fragment.setArguments(bundle);
-        fm.beginTransaction().replace(R.id.fragment_container, new FileManagerFragment())
-                .addToBackStack("First").commit();
+        Intent intent = new Intent(getContext(), FileManager.class);
+        intent.putExtra("path", rutaInterna + "/"); //rutaInterna
+        intent.putExtra("root", rutaInterna + "/");
+        startActivity(intent);
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putString("path", rutaInterna + "/");
+//        bundle.putString("root", rutaInterna + "/");
+//        FileManagerFragment fragment = new FileManagerFragment();
+//        fragment.setArguments(bundle);
+//        fm.beginTransaction().replace(R.id.fragment_container, new FileManagerFragment())
+//                .addToBackStack(null).commit();
     }
 
     /**
